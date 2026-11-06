@@ -1,0 +1,709 @@
+<app-sidebar>
+  <main hlmSidebarInset class="min-h-screen bg-[#faf9fc] text-foreground flex flex-col relative">
+    <!-- ======================================================== -->
+    <!-- TOP STORE NAVBAR (Responsive for Mobile, Tablet, Desktop)-->
+    <!-- ======================================================== -->
+    <header
+      class="sticky top-0 z-30 flex flex-col border-b border-gray-200/80 bg-white/95 backdrop-blur-md shadow-2xs"
+    >
+      <div class="flex h-16 items-center justify-between gap-3 sm:gap-6 px-4 sm:px-6 lg:px-8">
+        <!-- Search Input Bar with Live Suggestions Dropdown -->
+        <div class="flex-1 max-w-2xl relative" data-dropdown="search">
+          <div class="relative flex w-full items-center">
+            <input
+              type="text"
+              placeholder="Search for products, categories, pages..."
+              [value]="store.searchQuery()"
+              (input)="onSearchInput($event)"
+              (focus)="onSearchFocus()"
+              (blur)="onSearchBlur()"
+              (keydown.enter)="onSearchEnter()"
+              class="h-10 w-full rounded-xl border border-gray-200/90 bg-gray-50/90 pl-4 pr-11 text-sm text-gray-900 placeholder:text-gray-400 focus:bg-white focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all shadow-2xs [&::-webkit-search-cancel-button]:hidden"
+            />
+            @if (store.searchQuery()) {
+              <button
+                type="button"
+                (click)="store.clearSearchQuery()"
+                class="absolute right-9 flex size-6 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 transition-colors cursor-pointer"
+                title="Clear search"
+              >
+                <ng-icon name="lucideX" class="size-3.5" />
+              </button>
+            }
+            <button
+              type="button"
+              (click)="onSearchEnter()"
+              class="absolute right-1.5 flex size-7 items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors shadow-2xs cursor-pointer"
+              aria-label="Search"
+            >
+              <ng-icon name="lucideSearch" class="size-4" />
+            </button>
+          </div>
+
+          <!-- Live Search Suggestions Dropdown -->
+          @if (showSuggestions()) {
+            <div
+              class="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-gray-100 bg-white shadow-2xl z-50 overflow-hidden divide-y divide-gray-100 max-h-[75vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-100"
+            >
+              <!-- Products Section -->
+              @if (matchingProducts().length > 0) {
+                <div class="p-2">
+                  <div class="px-3 py-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center justify-between">
+                    <span>Products ({{ matchingProducts().length }})</span>
+                    <span class="text-[10px] text-purple-600 font-semibold">Click to View Product</span>
+                  </div>
+                  @for (prod of matchingProducts(); track prod.id) {
+                    <div
+                      (mousedown)="selectProduct(prod.id)"
+                      class="flex items-center gap-3 rounded-xl p-2 hover:bg-purple-50 cursor-pointer transition-colors group"
+                    >
+                      <div class="size-11 shrink-0 rounded-lg bg-gray-50 border border-gray-100 p-1 flex items-center justify-center overflow-hidden">
+                        <img [src]="prod.image" [alt]="prod.title" class="max-h-full max-w-full object-contain" />
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-1.5">
+                          <span class="text-[10px] font-bold uppercase tracking-wide text-purple-600 bg-purple-100/60 px-1.5 py-0.2 rounded">
+                            {{ prod.category }}
+                          </span>
+                          <span class="text-xs font-bold text-gray-900 group-hover:text-purple-700 truncate">
+                            {{ prod.title }}
+                          </span>
+                        </div>
+                        <div class="flex items-center gap-2 mt-0.5">
+                          <span class="text-xs font-extrabold text-gray-900">₹{{ prod.price | number }}</span>
+                          @if (prod.originalPrice > prod.price) {
+                            <span class="text-[10px] text-gray-400 line-through">₹{{ prod.originalPrice | number }}</span>
+                          }
+                          <span class="text-[10px] text-gray-400">★ {{ prod.rating }}</span>
+                        </div>
+                      </div>
+                      <span class="text-xs font-semibold text-purple-600 group-hover:translate-x-0.5 transition-transform">
+                        View →
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+
+              <!-- Pages & Categories Section -->
+              @if (matchingPages().length > 0) {
+                <div class="p-2 bg-gray-50/50">
+                  <div class="px-3 py-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                    Pages & Categories
+                  </div>
+                  @for (page of matchingPages(); track page.title) {
+                    <div
+                      (mousedown)="selectPage(page)"
+                      class="flex items-center gap-3 rounded-xl p-2 hover:bg-purple-100/60 cursor-pointer transition-colors group"
+                    >
+                      <div class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white border border-gray-200 text-purple-600 shadow-2xs">
+                        <ng-icon [name]="page.icon" class="size-4" />
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold text-gray-900 group-hover:text-purple-700 truncate">
+                          {{ page.title }}
+                        </p>
+                        <p class="text-[11px] text-gray-500 truncate">
+                          {{ page.subtitle }}
+                        </p>
+                      </div>
+                      <ng-icon name="lucideArrowRight" class="size-3.5 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                  }
+                </div>
+              }
+
+              <!-- Empty Results -->
+              @if (matchingProducts().length === 0 && matchingPages().length === 0) {
+                <div class="p-6 text-center space-y-2">
+                  <p class="text-xs sm:text-sm font-semibold text-gray-700">
+                    No products or pages matching "<span class="text-purple-600">{{ store.searchQuery() }}</span>"
+                  </p>
+                  <p class="text-xs text-gray-400">
+                    Try searching for headphones, watch, shoes, or explore categories.
+                  </p>
+                  <a
+                    [routerLink]="['/categories']"
+                    (click)="store.clearSearchQuery(); isSearchFocused.set(false)"
+                    class="inline-block mt-1 text-xs font-bold text-purple-600 hover:underline"
+                  >
+                    Explore Categories Explorer →
+                  </a>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Right: Mobile Search Toggle, Wishlist, Cart with Badge, Account -->
+        <div class="flex items-center gap-1 sm:gap-3">
+          <!-- Mobile Search Trigger Button (Only visible on small phones) -->
+          <button
+            type="button"
+            (click)="toggleMobileSearch()"
+            class="sm:hidden flex size-9 items-center justify-center rounded-xl text-gray-700 hover:bg-gray-100 transition-colors"
+            aria-label="Open search bar"
+          >
+            <ng-icon name="lucideSearch" class="size-5" />
+          </button>
+
+          <!-- Wishlist Button -->
+          <button
+            type="button"
+            (click)="store.openWishlist()"
+            class="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+            title="View Wishlist"
+          >
+            <div class="relative">
+              <ng-icon name="lucideHeart" class="size-5 text-gray-700" />
+              @if (store.wishlistCount() > 0) {
+                <span
+                  class="absolute -top-1.5 -right-2 flex size-4 items-center justify-center rounded-full bg-purple-600 text-[10px] font-bold text-white shadow-xs"
+                >
+                  {{ store.wishlistCount() }}
+                </span>
+              }
+            </div>
+            <span class="hidden md:inline">Wishlist</span>
+          </button>
+
+          <!-- Cart Button with Live Badge -->
+          <button
+            type="button"
+            (click)="store.openCart()"
+            class="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-sm font-semibold text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors cursor-pointer"
+            title="Open Shopping Cart"
+          >
+            <div class="relative">
+              <ng-icon name="lucideShoppingCart" class="size-5 text-gray-700" />
+              @if (store.cartCount() > 0) {
+                <span
+                  class="absolute -top-1.5 -right-2 flex size-4 items-center justify-center rounded-full bg-purple-600 text-[10px] font-bold text-white shadow-xs animate-in zoom-in"
+                >
+                  {{ store.cartCount() }}
+                </span>
+              }
+            </div>
+            <span class="hidden md:inline">Cart</span>
+          </button>
+
+          <!-- Account Dropdown -->
+          <div class="relative" data-dropdown="account">
+            <button
+              type="button"
+              (click)="toggleAccount()"
+              class="flex items-center gap-2 rounded-xl border border-gray-200/90 px-2.5 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+            >
+              <div
+                class="flex size-6 items-center justify-center rounded-full bg-purple-100 text-purple-700 font-bold text-xs"
+              >
+                <ng-icon name="lucideUser" class="size-3.5" />
+              </div>
+              <span class="hidden lg:inline">Account</span>
+              <ng-icon name="lucideChevronDown" class="size-3.5 text-gray-400 hidden lg:inline" />
+            </button>
+
+            @if (isAccountOpen()) {
+              <div
+                class="absolute right-0 top-full mt-2 w-52 rounded-2xl border border-gray-100 bg-white p-2 shadow-xl z-50 animate-in fade-in zoom-in-95 duration-100"
+              >
+                <div class="px-3 py-2 border-b border-gray-100 mb-1">
+                  <p class="text-xs text-gray-400">Signed in as</p>
+                  <p class="text-sm font-bold text-gray-900 truncate">aniket&#64;shopease.com</p>
+                </div>
+                <button
+                  type="button"
+                  (click)="store.openWishlist(); isAccountOpen.set(false)"
+                  class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 font-medium cursor-pointer"
+                >
+                  <ng-icon name="lucideHeart" class="size-4 text-purple-600" />
+                  <span>My Wishlist ({{ store.wishlistCount() }})</span>
+                </button>
+                <button
+                  type="button"
+                  (click)="store.openCart(); isAccountOpen.set(false)"
+                  class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 font-medium cursor-pointer"
+                >
+                  <ng-icon name="lucideShoppingCart" class="size-4 text-purple-600" />
+                  <span>My Cart ({{ store.cartCount() }})</span>
+                </button>
+                <button
+                  type="button"
+                  (click)="selectCategory('All'); isAccountOpen.set(false)"
+                  class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium cursor-pointer"
+                >
+                  <ng-icon name="lucideShoppingBag" class="size-4 text-gray-500" />
+                  <span>All Products</span>
+                </button>
+                <a
+                  [routerLink]="['/orders']"
+                  (click)="isAccountOpen.set(false)"
+                  class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 font-medium cursor-pointer"
+                >
+                  <ng-icon name="lucidePackage" class="size-4 text-purple-600" />
+                  <span>My Orders ({{ store.orders().length }})</span>
+                </a>
+                <a
+                  [routerLink]="['/settings']"
+                  (click)="isAccountOpen.set(false)"
+                  class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 font-medium cursor-pointer"
+                >
+                  <ng-icon name="lucideSettings" class="size-4 text-purple-600" />
+                  <span>Account Settings</span>
+                </a>
+                <div class="border-t border-gray-100 my-1"></div>
+                <button
+                  type="button"
+                  (click)="
+                    isAccountOpen.set(false); store.showToast('Logged out successfully', 'info')
+                  "
+                  class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-rose-600 hover:bg-rose-50 font-medium cursor-pointer"
+                >
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Expandable Mobile Search Row (Smooth on Phones) -->
+      @if (isMobileSearchOpen()) {
+        <div
+          class="sm:hidden border-t border-gray-100 px-4 py-2.5 bg-gray-50/90 animate-in slide-in-from-top-2 relative"
+          data-dropdown="search"
+        >
+          <div class="relative flex items-center">
+            <input
+              type="text"
+              placeholder="Search products, brands, categories..."
+              [value]="store.searchQuery()"
+              (input)="onSearchInput($event)"
+              (focus)="onSearchFocus()"
+              (keydown.enter)="onSearchEnter(); toggleMobileSearch()"
+              class="h-9 w-full rounded-xl border border-gray-200 bg-white pl-3 pr-16 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500/20 [&::-webkit-search-cancel-button]:hidden"
+            />
+            @if (store.searchQuery()) {
+              <button
+                type="button"
+                (click)="store.clearSearchQuery()"
+                class="absolute right-8 text-gray-400 hover:text-gray-700"
+              >
+                <ng-icon name="lucideX" class="size-3.5" />
+              </button>
+            }
+            <button
+              type="button"
+              (click)="toggleMobileSearch()"
+              class="absolute right-2 text-gray-400 hover:text-gray-700"
+            >
+              <ng-icon name="lucideX" class="size-4" />
+            </button>
+          </div>
+        </div>
+      }
+    </header>
+
+    <!-- ======================================================== -->
+    <!-- MAIN CONTENT VIEWPORT (DASHBOARD ROUTE)                  -->
+    <!-- ======================================================== -->
+    <div class="flex-1 w-full pb-12">
+      <router-outlet></router-outlet>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- SLIDE-OVER SHOPPING CART DRAWER                          -->
+    <!-- ======================================================== -->
+    @if (store.isCartOpen()) {
+      <div class="fixed inset-0 z-50 flex justify-end animate-in fade-in duration-200">
+        <!-- Backdrop -->
+        <div
+          class="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+          (click)="store.closeCart()"
+        ></div>
+
+        <!-- Drawer Content -->
+        <div
+          class="relative z-50 flex h-full w-full max-w-md flex-col bg-white shadow-2xl animate-in slide-in-from-right duration-300"
+        >
+          <!-- Drawer Header -->
+          <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+            <div class="flex items-center gap-2">
+              <div
+                class="flex size-8 items-center justify-center rounded-lg bg-purple-100 text-purple-700"
+              >
+                <ng-icon name="lucideShoppingCart" class="size-4" />
+              </div>
+              <h3 class="text-lg font-black text-gray-900">
+                Shopping Cart ({{ store.cartCount() }})
+              </h3>
+            </div>
+            <button
+              type="button"
+              (click)="store.closeCart()"
+              class="flex size-8 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+            >
+              <ng-icon name="lucideX" class="size-5" />
+            </button>
+          </div>
+
+          <!-- Free Shipping Tracker -->
+          <div class="bg-purple-50/70 border-b border-purple-100 px-6 py-3">
+            @if (store.cartSubtotal() >= 499) {
+              <div class="flex items-center gap-2 text-xs font-bold text-emerald-700">
+                <ng-icon name="lucideCheckCircle" class="size-4 text-emerald-600" />
+                <span>Congratulations! You unlocked FREE Standard Delivery!</span>
+              </div>
+            } @else {
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-semibold text-gray-700">
+                  <span>Add ₹{{ 499 - store.cartSubtotal() }} more for FREE delivery</span>
+                  <span>₹499</span>
+                </div>
+                <div class="h-1.5 w-full rounded-full bg-purple-200/80 overflow-hidden">
+                  <div
+                    class="h-full bg-purple-600 transition-all duration-300 rounded-full"
+                    [style.width.%]="(store.cartSubtotal() / 499) * 100"
+                  ></div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Cart Items List -->
+          <div class="flex-1 overflow-y-auto p-6 space-y-4">
+            @if (store.cartItems().length === 0) {
+              <div
+                class="flex flex-col items-center justify-center h-full text-center py-12 space-y-3"
+              >
+                <div
+                  class="flex size-16 items-center justify-center rounded-full bg-gray-100 text-gray-400"
+                >
+                  <ng-icon name="lucideShoppingBag" class="size-8" />
+                </div>
+                <h4 class="text-base font-bold text-gray-800">Your cart is empty</h4>
+                <p class="text-xs text-gray-500 max-w-xs">
+                  Looks like you haven't added anything to your cart yet. Explore our latest deals!
+                </p>
+                <button
+                  type="button"
+                  (click)="store.closeCart()"
+                  class="mt-2 rounded-xl bg-purple-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-purple-700 transition-colors shadow-xs"
+                >
+                  Start Shopping
+                </button>
+              </div>
+            } @else {
+              @for (item of store.cartItems(); track item.product.id) {
+                <div
+                  class="flex items-center gap-4 rounded-2xl border border-gray-100 bg-gray-50/50 p-3 hover:bg-white hover:shadow-xs transition-all"
+                >
+                  <!-- Item Thumbnail -->
+                  <a
+                    [routerLink]="['/product', item.product.id]"
+                    (click)="store.closeCart()"
+                    class="relative size-18 shrink-0 rounded-xl bg-white p-1 border border-gray-100 overflow-hidden flex items-center justify-center hover:border-purple-300 transition-colors cursor-pointer"
+                  >
+                    <img
+                      [src]="item.product.image"
+                      [alt]="item.product.title"
+                      class="size-full object-contain"
+                    />
+                  </a>
+
+                  <!-- Item Info & Stepper -->
+                  <div class="flex-1 min-w-0 space-y-1">
+                    <a
+                      [routerLink]="['/product', item.product.id]"
+                      (click)="store.closeCart()"
+                      class="text-sm font-bold text-gray-900 truncate hover:text-purple-600 block transition-colors cursor-pointer"
+                      [title]="item.product.title"
+                    >
+                      {{ item.product.title }}
+                    </a>
+                    <p class="text-xs text-purple-600 font-medium">{{ item.product.category }}</p>
+
+                    <div class="flex items-center justify-between pt-1">
+                      <!-- Price -->
+                      <span class="text-sm font-black text-gray-900">
+                        ₹{{ item.product.price * item.quantity | number }}
+                      </span>
+
+                      <!-- Stepper -->
+                      <div
+                        class="flex items-center rounded-lg border border-gray-200 bg-white shadow-2xs"
+                      >
+                        <button
+                          type="button"
+                          (click)="store.updateQuantity(item.product.id, -1)"
+                          class="flex size-7 items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                          aria-label="Decrease quantity"
+                        >
+                          <ng-icon name="lucideMinus" class="size-3" />
+                        </button>
+                        <span class="w-7 text-center text-xs font-bold text-gray-800">
+                          {{ item.quantity }}
+                        </span>
+                        <button
+                          type="button"
+                          (click)="store.updateQuantity(item.product.id, 1)"
+                          class="flex size-7 items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                          aria-label="Increase quantity"
+                        >
+                          <ng-icon name="lucidePlus" class="size-3" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Delete Button -->
+                  <button
+                    type="button"
+                    (click)="store.removeFromCart(item.product.id)"
+                    class="flex size-7 items-center justify-center text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                    title="Remove item"
+                  >
+                    <ng-icon name="lucideTrash2" class="size-4" />
+                  </button>
+                </div>
+              }
+            }
+          </div>
+
+          <!-- Drawer Footer & Checkout Summary -->
+          @if (store.cartItems().length > 0) {
+            <div class="border-t border-gray-100 bg-white p-6 space-y-4">
+              <div class="space-y-1.5 text-xs text-gray-600">
+                <div class="flex justify-between">
+                  <span>Subtotal</span>
+                  <span class="font-bold text-gray-900">₹{{ store.cartSubtotal() | number }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Delivery Charge</span>
+                  @if (store.cartShipping() === 0) {
+                    <span class="font-bold text-emerald-600">FREE</span>
+                  } @else {
+                    <span class="font-bold text-gray-900">₹{{ store.cartShipping() }}</span>
+                  }
+                </div>
+                <div
+                  class="border-t border-gray-100 pt-2 flex justify-between text-base font-black text-gray-900"
+                >
+                  <span>Total Amount</span>
+                  <span class="text-purple-600">₹{{ store.cartTotal() | number }}</span>
+                </div>
+              </div>
+
+              <!-- Checkout Button -->
+              <button
+                type="button"
+                (click)="store.checkout()"
+                class="flex w-full items-center justify-center gap-2 rounded-xl bg-purple-600 py-3.5 text-sm font-bold text-white shadow-md shadow-purple-600/30 hover:bg-purple-700 active:scale-98 transition-all cursor-pointer"
+              >
+                <span>Proceed to Checkout</span>
+                <ng-icon name="lucideArrowRight" class="size-4" />
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- ======================================================== -->
+    <!-- SLIDE-OVER WISHLIST DRAWER                               -->
+    <!-- ======================================================== -->
+    @if (store.isWishlistOpen()) {
+      <div class="fixed inset-0 z-50 flex justify-end animate-in fade-in duration-200">
+        <div
+          class="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+          (click)="store.closeWishlist()"
+        ></div>
+
+        <div
+          class="relative z-50 flex h-full w-full max-w-md flex-col bg-white shadow-2xl animate-in slide-in-from-right duration-300"
+        >
+          <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+            <div class="flex items-center gap-2">
+              <div
+                class="flex size-8 items-center justify-center rounded-lg bg-rose-100 text-rose-600"
+              >
+                <ng-icon name="lucideHeart" class="size-4" />
+              </div>
+              <h3 class="text-lg font-black text-gray-900">
+                My Wishlist ({{ store.wishlistCount() }})
+              </h3>
+            </div>
+            <button
+              type="button"
+              (click)="store.closeWishlist()"
+              class="flex size-8 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+            >
+              <ng-icon name="lucideX" class="size-5" />
+            </button>
+          </div>
+
+          <div class="flex-1 overflow-y-auto p-6 space-y-4">
+            @if (store.wishlistCount() === 0) {
+              <div
+                class="flex flex-col items-center justify-center h-full text-center py-12 space-y-3"
+              >
+                <div
+                  class="flex size-16 items-center justify-center rounded-full bg-rose-50 text-rose-400"
+                >
+                  <ng-icon name="lucideHeart" class="size-8" />
+                </div>
+                <h4 class="text-base font-bold text-gray-800">Your wishlist is empty</h4>
+                <p class="text-xs text-gray-500 max-w-xs">
+                  Tap the heart icon on any product to save it to your wishlist.
+                </p>
+                <button
+                  type="button"
+                  (click)="store.closeWishlist()"
+                  class="mt-2 rounded-xl bg-purple-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-purple-700 transition-colors shadow-xs"
+                >
+                  Explore Products
+                </button>
+              </div>
+            } @else {
+              <div class="flex items-center justify-between">
+                <p class="text-xs text-gray-500 font-medium">Saved items ready for checkout:</p>
+                <a
+                  [routerLink]="['/wishlist']"
+                  (click)="store.closeWishlist()"
+                  class="text-xs font-bold text-purple-600 hover:text-purple-700"
+                >
+                  View Page →
+                </a>
+              </div>
+              <div class="space-y-3">
+                @for (item of store.wishlistedProducts(); track item.id) {
+                  <div class="rounded-2xl border border-gray-100 bg-gray-50/50 p-3 space-y-2">
+                    <div class="flex items-center gap-3">
+                      <a [routerLink]="['/product', item.id]" (click)="store.closeWishlist()" class="size-14 rounded-xl bg-white p-1 border border-gray-100 flex items-center justify-center shrink-0 overflow-hidden hover:border-purple-300 transition-colors cursor-pointer">
+                        <img [src]="item.image" [alt]="item.title" class="max-h-full max-w-full object-contain" />
+                      </a>
+                      <div class="flex-1 min-w-0">
+                        <span class="text-[10px] font-bold text-purple-600 uppercase">{{ item.category }}</span>
+                        <a [routerLink]="['/product', item.id]" (click)="store.closeWishlist()" class="text-xs font-bold text-gray-900 truncate hover:text-purple-600 transition-colors block cursor-pointer">
+                          {{ item.title }}
+                        </a>
+                        <div class="flex items-baseline gap-1 mt-0.5">
+                          <span class="text-xs font-extrabold text-gray-900">₹{{ item.price | number }}</span>
+                          @if (item.originalPrice > item.price) {
+                            <span class="text-[10px] text-gray-400 line-through">₹{{ item.originalPrice | number }}</span>
+                          }
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        (click)="store.toggleWishlist(item)"
+                        class="flex size-6 items-center justify-center text-gray-400 hover:text-rose-600 transition-colors"
+                        title="Remove"
+                      >
+                        <ng-icon name="lucideTrash2" class="size-3.5" />
+                      </button>
+                    </div>
+                    <div class="flex items-center gap-2 pt-1 border-t border-gray-200/50">
+                      <button
+                        type="button"
+                        (click)="store.addToCart(item, 1); store.toggleWishlist(item)"
+                        class="w-full rounded-xl bg-purple-600 py-2 text-xs font-bold text-white hover:bg-purple-700 transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs"
+                      >
+                        <ng-icon name="lucideShoppingCart" class="size-3.5" />
+                        Move to Cart
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ======================================================== -->
+    <!-- ORDER SUCCESS CONFIRMATION MODAL                         -->
+    <!-- ======================================================== -->
+    @if (store.orderCompleted()) {
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+      >
+        <div
+          class="fixed inset-0 bg-black/50 backdrop-blur-xs"
+          (click)="store.closeOrderSuccess()"
+        ></div>
+
+        <div
+          class="relative z-50 w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 text-center shadow-2xl animate-in zoom-in-95 duration-200 space-y-4"
+        >
+          <div
+            class="mx-auto flex size-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-md shadow-emerald-500/20"
+          >
+            <ng-icon name="lucideCheckCircle" class="size-8" />
+          </div>
+
+          <div class="space-y-1">
+            <h3 class="text-2xl font-black text-gray-900">Order Confirmed!</h3>
+            <p class="text-xs text-gray-500 font-medium">Order #SE-{{ 874291 }}</p>
+          </div>
+
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Thank you for shopping with <strong>ShopEase</strong>! We've received your order and our
+            dispatch team is already preparing your delivery package.
+          </p>
+
+          <div
+            class="rounded-2xl bg-purple-50/70 p-3 text-xs text-purple-800 font-semibold flex items-center justify-center gap-2"
+          >
+            <ng-icon name="lucideTruck" class="size-4 text-purple-600" />
+            <span>Estimated delivery in 2-3 business days</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-2">
+            <a
+              [routerLink]="['/orders']"
+              (click)="store.closeOrderSuccess()"
+              class="rounded-xl border border-purple-200 bg-purple-50 py-3 text-xs sm:text-sm font-bold text-purple-700 hover:bg-purple-100 transition-colors flex items-center justify-center cursor-pointer"
+            >
+              View My Orders
+            </a>
+            <button
+              type="button"
+              (click)="store.closeOrderSuccess()"
+              class="rounded-xl bg-purple-600 py-3 text-xs sm:text-sm font-bold text-white hover:bg-purple-700 transition-colors shadow-md shadow-purple-600/30 cursor-pointer"
+            >
+              Continue Shopping
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ======================================================== -->
+    <!-- FLOATING TOAST NOTIFICATION                              -->
+    <!-- ======================================================== -->
+    @if (store.toast(); as toast) {
+      <div
+        class="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-2xl bg-gray-900 text-white px-4 py-3 shadow-xl animate-in slide-in-from-bottom-4 duration-200 border border-gray-800 max-w-sm"
+      >
+        <div
+          class="flex size-7 shrink-0 items-center justify-center rounded-lg"
+          [class.bg-emerald-500]="toast.type === 'success'"
+          [class.bg-purple-600]="toast.type === 'info'"
+          [class.bg-rose-500]="toast.type === 'error'"
+        >
+          <ng-icon name="lucideSparkles" class="size-4 text-white" />
+        </div>
+        <p class="text-xs font-semibold leading-snug flex-1">{{ toast.text }}</p>
+        <button
+          type="button"
+          (click)="store.dismissToast()"
+          class="text-gray-400 hover:text-white transition-colors"
+        >
+          <ng-icon name="lucideX" class="size-4" />
+        </button>
+      </div>
+    }
+  </main>
+</app-sidebar>

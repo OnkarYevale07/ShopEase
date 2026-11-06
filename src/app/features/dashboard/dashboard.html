@@ -1,0 +1,935 @@
+<div class="w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-8 sm:space-y-10">
+  <!-- Active Filter Notification Bar (Appears when search query or category is selected) -->
+  @if (hasActiveFilters()) {
+    <div
+      class="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-purple-50/90 border border-purple-200/80 px-4 py-3 text-xs sm:text-sm text-purple-900 shadow-2xs animate-in fade-in"
+    >
+      <div class="flex items-center gap-2">
+        <span class="font-bold">Active Filter:</span>
+        @if (store.selectedCategory() !== 'All') {
+          <span class="rounded-lg bg-purple-600 px-2 py-0.5 font-semibold text-white text-xs">
+            Category: {{ store.selectedCategory() }}
+          </span>
+        }
+        @if (store.searchQuery()) {
+          <span class="rounded-lg bg-white px-2 py-0.5 font-semibold text-purple-700 text-xs border border-purple-200">
+            Query: "{{ store.searchQuery() }}"
+          </span>
+        }
+      </div>
+      <button
+        type="button"
+        (click)="clearFilters()"
+        class="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-bold text-purple-700 hover:bg-purple-100 transition-colors cursor-pointer"
+      >
+        <span>Clear Filters</span>
+        <ng-icon name="lucideX" class="size-3.5" />
+      </button>
+    </div>
+  }
+
+  <!-- ======================================================== -->
+  <!-- 1. HERO BANNER CAROUSEL                                  -->
+  <!-- ======================================================== -->
+  <section
+    class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-100/90 via-purple-50/90 to-purple-200/70 border border-purple-200/60 shadow-xs"
+  >
+    <div
+      class="grid grid-cols-1 lg:grid-cols-12 items-center p-5 sm:p-8 lg:p-12 gap-6 lg:gap-8 min-h-[360px] lg:min-h-[420px]"
+    >
+      <!-- Left Hero Content -->
+      <div class="lg:col-span-6 space-y-3 sm:space-y-5 z-10 text-center lg:text-left">
+        <div
+          class="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-bold text-purple-700 shadow-xs"
+        >
+          <span class="size-1.5 rounded-full bg-purple-600 animate-pulse"></span>
+          {{ slides[activeSlide()].badge }}
+        </div>
+
+        <h1
+          class="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight leading-tight"
+        >
+          {{ slides[activeSlide()].title }}
+        </h1>
+
+        <p class="text-sm sm:text-base lg:text-lg text-gray-600 font-medium max-w-md mx-auto lg:mx-0">
+          {{ slides[activeSlide()].subtitle }}
+        </p>
+
+        <div class="pt-2 flex justify-center lg:justify-start">
+          <a
+            [href]="slides[activeSlide()].ctaUrl"
+            class="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-purple-600/30 hover:bg-purple-700 active:scale-95 transition-all cursor-pointer"
+          >
+            <span>{{ slides[activeSlide()].ctaText }}</span>
+            <ng-icon name="lucideArrowRight" class="size-4" />
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Hero Product Arrangement -->
+      <div class="lg:col-span-6 relative flex items-center justify-center pt-2 lg:pt-0">
+        <div
+          class="absolute size-64 sm:size-80 lg:size-96 rounded-full bg-purple-300/30 blur-2xl pointer-events-none"
+        ></div>
+
+        <div class="relative grid grid-cols-2 gap-2.5 sm:gap-4 max-w-sm sm:max-w-md w-full">
+          <!-- Headphones -->
+          <div
+            class="rounded-2xl bg-white/85 backdrop-blur-md p-3 shadow-md border border-white/60 hover:-translate-y-1 transition-transform cursor-pointer"
+            [routerLink]="['/product', trendingProducts[0].id]"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&auto=format&fit=crop&q=80"
+              alt="Wireless Headphones"
+              class="w-full h-24 sm:h-32 object-contain"
+            />
+          </div>
+
+          <!-- Smart Watch -->
+          <div
+            class="rounded-2xl bg-white/85 backdrop-blur-md p-3 shadow-md border border-white/60 hover:-translate-y-1 transition-transform cursor-pointer"
+            [routerLink]="['/product', trendingProducts[1].id]"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&auto=format&fit=crop&q=80"
+              alt="Smart Watch"
+              class="w-full h-24 sm:h-32 object-contain"
+            />
+          </div>
+
+          <!-- Sneakers -->
+          <div
+            class="rounded-2xl bg-white/85 backdrop-blur-md p-3 shadow-md border border-white/60 hover:-translate-y-1 transition-transform cursor-pointer"
+            [routerLink]="['/product', trendingProducts[2].id]"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&auto=format&fit=crop&q=80"
+              alt="Casual Sneakers"
+              class="w-full h-24 sm:h-32 object-contain"
+            />
+          </div>
+
+          <!-- Shopping Bag Brand Mark -->
+          <div
+            class="rounded-2xl bg-white/85 backdrop-blur-md p-3 shadow-md border border-white/60 hover:-translate-y-1 transition-transform flex items-center justify-center"
+          >
+            <div class="flex flex-col items-center justify-center p-2 text-center">
+              <div
+                class="flex size-12 sm:size-14 items-center justify-center rounded-2xl bg-purple-600 text-white shadow-md shadow-purple-600/30"
+              >
+                <ng-icon name="lucideShoppingBag" class="size-6 sm:size-7" />
+              </div>
+              <span class="mt-2 text-xs font-black text-gray-800">Big Deals</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Controls -->
+    <button
+      type="button"
+      (click)="prevSlide()"
+      class="absolute left-2.5 sm:left-4 top-1/2 -translate-y-1/2 flex size-8 sm:size-10 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-md hover:bg-white hover:text-purple-600 transition-all cursor-pointer z-20"
+      aria-label="Previous slide"
+    >
+      <ng-icon name="lucideChevronLeft" class="size-4 sm:size-5" />
+    </button>
+
+    <button
+      type="button"
+      (click)="nextSlide()"
+      class="absolute right-2.5 sm:right-4 top-1/2 -translate-y-1/2 flex size-8 sm:size-10 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-md hover:bg-white hover:text-purple-600 transition-all cursor-pointer z-20"
+      aria-label="Next slide"
+    >
+      <ng-icon name="lucideChevronRight" class="size-4 sm:size-5" />
+    </button>
+
+    <!-- Carousel Dots -->
+    <div class="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
+      @for (slide of slides; track $index) {
+        <button
+          type="button"
+          (click)="goToSlide($index)"
+          [class]="
+            activeSlide() === $index
+              ? 'w-6 h-2 bg-purple-600 rounded-full transition-all'
+              : 'w-2 h-2 bg-purple-300 rounded-full hover:bg-purple-400 transition-all'
+          "
+          [attr.aria-label]="'Go to slide ' + ($index + 1)"
+        ></button>
+      }
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 2. SHOP BY CATEGORY                                      -->
+  <!-- ======================================================== -->
+  <section id="categories" class="space-y-3 sm:space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-lg sm:text-2xl font-black text-gray-900 tracking-tight">Shop by Category</h2>
+      <a
+        [routerLink]="['/categories']"
+        class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-purple-600 hover:text-purple-700 transition-colors cursor-pointer"
+      >
+        <span>View All</span>
+        <ng-icon name="lucideArrowRight" class="size-3.5" />
+      </a>
+    </div>
+
+    <!-- Category Pill Cards (Responsive: horizontal scroll on mobile, grid on tablets/desktop) -->
+    <div
+      class="flex overflow-x-auto pb-2 scrollbar-none snap-x gap-2.5 sm:grid sm:grid-cols-5 md:grid-cols-9 sm:gap-3"
+    >
+      @for (cat of categories; track cat.id) {
+        <button
+          type="button"
+          (click)="onCategoryClick(cat.name)"
+          [class]="
+            store.selectedCategory().toLowerCase() === cat.name.toLowerCase()
+              ? 'group shrink-0 w-24 sm:w-auto snap-start flex flex-col items-center gap-2 rounded-2xl border-2 border-purple-600 bg-purple-50/80 p-2.5 sm:p-3 shadow-xs transition-all cursor-pointer'
+              : 'group shrink-0 w-24 sm:w-auto snap-start flex flex-col items-center gap-2 rounded-2xl border border-gray-100 bg-white p-2.5 sm:p-3 shadow-2xs hover:shadow-md hover:border-purple-200 hover:-translate-y-0.5 transition-all cursor-pointer'
+          "
+        >
+          <div
+            [class]="
+              'flex size-12 sm:size-14 items-center justify-center rounded-2xl transition-transform group-hover:scale-105 ' +
+              cat.bgColor
+            "
+          >
+            <ng-icon [name]="cat.icon" [class]="'size-6 sm:size-7 ' + cat.textColor" />
+          </div>
+          <span
+            class="text-[11px] sm:text-xs font-bold text-gray-800 text-center truncate w-full"
+            [class.text-purple-700]="store.selectedCategory().toLowerCase() === cat.name.toLowerCase()"
+          >
+            {{ cat.name }}
+          </span>
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 3. TRENDING PRODUCTS & FLASH DEALS                       -->
+  <!-- ======================================================== -->
+  <section id="trending" class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
+    <!-- Left Column: Trending Products Grid (8 cols) -->
+    <div class="lg:col-span-8 space-y-3 sm:space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg sm:text-2xl font-black text-gray-900 tracking-tight">Trending Products</h2>
+        <a
+          [routerLink]="['/trending']"
+          class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-purple-600 hover:text-purple-700 transition-colors"
+        >
+          <span>View All</span>
+          <ng-icon name="lucideArrowRight" class="size-3.5" />
+        </a>
+      </div>
+
+      @if (filteredTrendingProducts().length === 0) {
+        <div class="rounded-3xl border border-gray-100 bg-white p-8 text-center space-y-2">
+          <p class="text-sm font-bold text-gray-800">No trending products match your filter.</p>
+          <button
+            type="button"
+            (click)="clearFilters()"
+            class="text-xs font-bold text-purple-600 hover:underline cursor-pointer"
+          >
+            Clear all filters
+          </button>
+        </div>
+      } @else {
+        <!-- 4-Card Responsive Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
+          @for (product of filteredTrendingProducts(); track product.id) {
+            <div
+              [routerLink]="['/product', product.id]"
+              class="group relative flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-2.5 sm:p-3 shadow-2xs hover:shadow-md hover:border-purple-200 transition-all cursor-pointer"
+            >
+              <!-- Card Header: Discount Badge & Wishlist -->
+              <div class="flex items-center justify-between mb-1.5">
+                @if (product.discountPercent) {
+                  <span
+                    class="rounded-md bg-rose-50 px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs font-bold text-rose-600"
+                  >
+                    -{{ product.discountPercent }}%
+                  </span>
+                }
+                <button
+                  type="button"
+                  (click)="toggleWishlist(product, $event)"
+                  [class]="
+                    isWishlisted(product.id)
+                      ? 'ml-auto flex size-7 items-center justify-center rounded-full bg-rose-50 text-rose-600 shadow-2xs transition-all'
+                      : 'ml-auto flex size-7 items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 group-hover:text-gray-600 transition-all'
+                  "
+                  aria-label="Save to Wishlist"
+                >
+                  <ng-icon
+                    name="lucideHeart"
+                    [class]="
+                      isWishlisted(product.id)
+                        ? 'size-4 text-rose-600 [&_svg]:fill-rose-600 [&_svg]:stroke-rose-600 scale-110'
+                        : 'size-4 text-gray-400'
+                    "
+                  />
+                </button>
+              </div>
+
+              <!-- Product Image -->
+              <div
+                class="relative w-full aspect-square flex items-center justify-center overflow-hidden rounded-xl bg-gray-50/60 p-2"
+              >
+                <img
+                  [src]="product.image"
+                  [alt]="product.title"
+                  class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+
+              <!-- Product Details -->
+              <div class="mt-2.5 space-y-1">
+                <a
+                  [routerLink]="['/product', product.id]"
+                  class="text-xs sm:text-sm font-bold text-gray-900 truncate hover:text-purple-600 transition-colors block cursor-pointer"
+                  [title]="product.title"
+                >
+                  {{ product.title }}
+                </a>
+
+                <!-- Rating -->
+                <div class="flex items-center gap-1 text-[11px] sm:text-xs">
+                  <ng-icon name="lucideStar" class="size-3.5 text-amber-400 fill-amber-400" />
+                  <span class="font-bold text-gray-800">{{ product.rating }}</span>
+                  <span class="text-gray-400">({{ product.reviewsCount }})</span>
+                </div>
+
+                <!-- Price -->
+                <div class="flex items-baseline gap-1.5 pt-0.5">
+                  <span class="text-sm sm:text-base font-extrabold text-gray-900"
+                    >₹{{ product.price | number }}</span
+                  >
+                  <span class="text-[10px] sm:text-xs text-gray-400 line-through"
+                    >₹{{ product.originalPrice | number }}</span
+                  >
+                </div>
+              </div>
+
+              <!-- Add to Cart Button -->
+              <button
+                type="button"
+                (click)="addToCart(product, $event)"
+                [class]="
+                  addedProducts()[product.id]
+                    ? 'mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-2 text-xs font-bold text-white shadow-xs transition-all'
+                    : 'mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-xl border border-purple-200 bg-purple-50/80 py-2 text-xs font-bold text-purple-700 hover:bg-purple-600 hover:text-white transition-all shadow-xs cursor-pointer'
+                "
+              >
+                @if (addedProducts()[product.id]) {
+                  <span>✓ Added</span>
+                } @else {
+                  <ng-icon name="lucideShoppingCart" class="size-3.5" />
+                  <span>Add to Cart</span>
+                }
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Right Column: Flash Deals Special Card (4 cols) -->
+    <div
+      id="flash-deals"
+      class="lg:col-span-4 rounded-3xl border border-rose-100 bg-gradient-to-b from-rose-50/70 via-purple-50/40 to-white p-4 sm:p-5 shadow-xs space-y-4"
+    >
+      <!-- Flash Deals Header with Real-Time Countdown -->
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-rose-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div
+            class="flex size-7 items-center justify-center rounded-lg bg-rose-500 text-white shadow-xs"
+          >
+            <ng-icon name="lucideZap" class="size-4" />
+          </div>
+          <span class="font-black text-gray-900 text-base">Flash Deals</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1 text-xs text-gray-600 font-medium">
+            <span class="text-gray-400">Ends in</span>
+            <span class="rounded bg-rose-100 px-1.5 py-0.5 font-bold text-rose-700 text-xs"
+              >{{ countdown().hours }} h</span
+            >
+            <span class="rounded bg-rose-100 px-1.5 py-0.5 font-bold text-rose-700 text-xs"
+              >{{ countdown().minutes }} m</span
+            >
+            <span class="rounded bg-rose-100 px-1.5 py-0.5 font-bold text-rose-700 text-xs"
+              >{{ countdown().seconds }} s</span
+            >
+          </div>
+          <a
+            [routerLink]="['/flash-deals']"
+            class="inline-flex items-center gap-0.5 text-xs font-bold text-purple-600 hover:text-purple-700 transition-colors ml-1"
+          >
+            <span>View All</span>
+            <ng-icon name="lucideArrowRight" class="size-3" />
+          </a>
+        </div>
+      </div>
+
+      <!-- Flash Deal Featured Product -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="rounded-md bg-rose-600 px-2 py-0.5 text-xs font-bold text-white shadow-xs">
+            -{{ flashDealProduct.discountPercent }}%
+          </span>
+          <button
+            type="button"
+            (click)="toggleWishlist(flashDealProduct, $event)"
+            [class]="
+              isWishlisted(flashDealProduct.id)
+                ? 'flex size-7 items-center justify-center rounded-full bg-rose-50 text-rose-600 shadow-2xs transition-all'
+                : 'flex size-7 items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-all'
+            "
+            aria-label="Save to Wishlist"
+          >
+            <ng-icon
+              name="lucideHeart"
+              [class]="
+                isWishlisted(flashDealProduct.id)
+                  ? 'size-4 text-rose-600 [&_svg]:fill-rose-600 [&_svg]:stroke-rose-600 scale-110'
+                  : 'size-4 text-gray-400 hover:text-gray-600'
+              "
+            />
+          </button>
+        </div>
+
+        <!-- Image -->
+        <div
+          class="aspect-4/3 w-full rounded-2xl bg-white p-4 shadow-2xs flex items-center justify-center overflow-hidden cursor-pointer"
+          [routerLink]="['/product', flashDealProduct.id]"
+        >
+          <img
+            [src]="flashDealProduct.image"
+            [alt]="flashDealProduct.title"
+            class="h-full w-full object-contain hover:scale-105 transition-transform"
+          />
+        </div>
+
+        <!-- Details -->
+        <div class="space-y-1">
+          <a
+            [routerLink]="['/product', flashDealProduct.id]"
+            class="text-base font-bold text-gray-900 cursor-pointer hover:text-purple-600 block transition-colors"
+          >
+            {{ flashDealProduct.title }}
+          </a>
+          <div class="flex items-center gap-1.5 text-xs">
+            <ng-icon name="lucideStar" class="size-3.5 text-amber-400 fill-amber-400" />
+            <span class="font-bold text-gray-800">{{ flashDealProduct.rating }}</span>
+            <span class="text-gray-400">({{ flashDealProduct.reviewsCount }})</span>
+          </div>
+          <div class="flex items-baseline gap-2 pt-1">
+            <span class="text-xl font-black text-gray-900"
+              >₹{{ flashDealProduct.price | number }}</span
+            >
+            <span class="text-sm text-gray-400 line-through"
+              >₹{{ flashDealProduct.originalPrice | number }}</span
+            >
+          </div>
+        </div>
+
+        <!-- Grab Deal Button -->
+        <button
+          type="button"
+          (click)="addToCart(flashDealProduct, $event)"
+          [class]="
+            addedProducts()[flashDealProduct.id]
+              ? 'w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-sm font-bold text-white shadow-md shadow-emerald-600/30 transition-all'
+              : 'w-full flex items-center justify-center gap-2 rounded-xl bg-purple-600 py-3 text-sm font-bold text-white shadow-md shadow-purple-600/30 hover:bg-purple-700 transition-all cursor-pointer'
+          "
+        >
+          @if (addedProducts()[flashDealProduct.id]) {
+            <span>✓ Added to Cart</span>
+          } @else {
+            <span>Grab Deal</span>
+          }
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 4. DUAL PROMOTIONAL BANNERS                              -->
+  <!-- ======================================================== -->
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+    <!-- Promo Banner 1: Fashion Collection -->
+    <div
+      class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-100 via-purple-50 to-pink-100 p-5 sm:p-8 flex items-center justify-between border border-purple-200/60 shadow-xs"
+    >
+      <div class="space-y-2 sm:space-y-3 z-10 max-w-[60%]">
+        <h3 class="text-lg sm:text-2xl font-black text-gray-900 tracking-tight leading-snug">
+          New Season Fashion Collection
+        </h3>
+        <p class="text-xs sm:text-sm text-gray-600 font-medium">Explore the latest trends</p>
+        <button
+          type="button"
+          (click)="store.setSelectedCategory('Fashion')"
+          class="inline-flex items-center gap-1.5 rounded-xl bg-purple-600 px-3.5 sm:px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-purple-700 transition-colors cursor-pointer"
+        >
+          <span>Shop Fashion</span>
+          <ng-icon name="lucideArrowRight" class="size-3" />
+        </button>
+      </div>
+
+      <div
+        class="relative size-28 sm:size-40 lg:size-44 shrink-0 rounded-2xl overflow-hidden shadow-md"
+      >
+        <img
+          src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&auto=format&fit=crop&q=80"
+          alt="Fashion Collection"
+          class="size-full object-cover"
+        />
+      </div>
+    </div>
+
+    <!-- Promo Banner 2: Upgrade Your Tech -->
+    <div
+      class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-50 via-purple-50 to-indigo-100 p-5 sm:p-8 flex items-center justify-between border border-indigo-200/60 shadow-xs"
+    >
+      <div class="space-y-2 sm:space-y-3 z-10 max-w-[60%]">
+        <h3 class="text-lg sm:text-2xl font-black text-gray-900 tracking-tight leading-snug">
+          Upgrade Your Tech
+        </h3>
+        <p class="text-xs sm:text-sm text-gray-600 font-medium">Best deals on top electronics</p>
+        <button
+          type="button"
+          (click)="store.setSelectedCategory('Electronics')"
+          class="inline-flex items-center gap-1.5 rounded-xl bg-purple-600 px-3.5 sm:px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-purple-700 transition-colors cursor-pointer"
+        >
+          <span>Shop Electronics</span>
+          <ng-icon name="lucideArrowRight" class="size-3" />
+        </button>
+      </div>
+
+      <div
+        class="relative size-28 sm:size-40 lg:size-44 shrink-0 rounded-2xl overflow-hidden shadow-md"
+      >
+        <img
+          src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&auto=format&fit=crop&q=80"
+          alt="Electronics Tech"
+          class="size-full object-cover"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 5. NEW ARRIVALS                                          -->
+  <!-- ======================================================== -->
+  <section id="new-arrivals" class="space-y-3 sm:space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-lg sm:text-2xl font-black text-gray-900 tracking-tight">New Arrivals</h2>
+      <a
+        [routerLink]="['/categories']"
+        class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-purple-600 hover:text-purple-700 transition-colors"
+      >
+        <span>View All</span>
+        <ng-icon name="lucideArrowRight" class="size-3.5" />
+      </a>
+    </div>
+
+    @if (filteredNewArrivals().length === 0) {
+      <div class="rounded-3xl border border-gray-100 bg-white p-8 text-center space-y-2">
+        <p class="text-sm font-bold text-gray-800">No new arrivals match your current filter.</p>
+        <button
+          type="button"
+          (click)="clearFilters()"
+          class="text-xs font-bold text-purple-600 hover:underline cursor-pointer"
+        >
+          Clear filters
+        </button>
+      </div>
+    } @else {
+      <!-- 4-Card Responsive Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
+        @for (item of filteredNewArrivals(); track item.id) {
+          <div
+            [routerLink]="['/product', item.id]"
+            class="group relative flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-2.5 sm:p-3 shadow-2xs hover:shadow-md hover:border-purple-200 transition-all cursor-pointer"
+          >
+            <!-- Card Wishlist Button -->
+            <div class="flex justify-end mb-1">
+              <button
+                type="button"
+                (click)="toggleWishlist(item, $event)"
+                [class]="
+                  isWishlisted(item.id)
+                    ? 'flex size-7 items-center justify-center rounded-full bg-rose-50 text-rose-600 shadow-2xs transition-all'
+                    : 'flex size-7 items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 group-hover:text-gray-600 transition-all'
+                "
+                aria-label="Toggle Wishlist"
+              >
+                <ng-icon
+                  name="lucideHeart"
+                  [class]="
+                    isWishlisted(item.id)
+                      ? 'size-4 text-rose-600 [&_svg]:fill-rose-600 [&_svg]:stroke-rose-600 scale-110'
+                      : 'size-4 text-gray-400 group-hover:text-gray-600'
+                  "
+                />
+              </button>
+            </div>
+
+            <!-- Image -->
+            <div
+              class="aspect-square w-full rounded-xl bg-gray-50/60 p-2 flex items-center justify-center overflow-hidden"
+            >
+              <img
+                [src]="item.image"
+                [alt]="item.title"
+                class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+
+            <!-- Details -->
+            <div class="mt-2.5 space-y-1">
+              <a
+                [routerLink]="['/product', item.id]"
+                class="text-xs sm:text-sm font-bold text-gray-900 truncate hover:text-purple-600 transition-colors block cursor-pointer"
+              >
+                {{ item.title }}
+              </a>
+
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-sm sm:text-base font-extrabold text-gray-900"
+                  >₹{{ item.price | number }}</span
+                >
+              </div>
+
+              <!-- Rating -->
+              <div class="flex items-center gap-1 text-[11px] sm:text-xs">
+                <ng-icon name="lucideStar" class="size-3.5 text-amber-400 fill-amber-400" />
+                <span class="font-bold text-gray-800">{{ item.rating }}</span>
+                <span class="text-gray-400">({{ item.reviewsCount }})</span>
+              </div>
+            </div>
+
+            <!-- Add to Cart -->
+            <button
+              type="button"
+              (click)="addToCart(item, $event)"
+              [class]="
+                addedProducts()[item.id]
+                  ? 'mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-2 text-xs font-bold text-white shadow-xs transition-all'
+                  : 'mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-gray-50/80 py-2 text-xs font-bold text-gray-700 hover:bg-purple-600 hover:border-purple-600 hover:text-white transition-all shadow-xs cursor-pointer'
+              "
+            >
+              @if (addedProducts()[item.id]) {
+                <span>✓ Added</span>
+              } @else {
+                <ng-icon name="lucideShoppingCart" class="size-3.5" />
+                <span>Add to Cart</span>
+              }
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 6. VALUE PROPOSITION / TRUST BADGES                      -->
+  <!-- ======================================================== -->
+  <section class="rounded-3xl border border-gray-100 bg-white p-5 sm:p-7 shadow-2xs">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+      <div class="flex items-center gap-3">
+        <div
+          class="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-purple-50 text-purple-600"
+        >
+          <ng-icon name="lucideTruck" class="size-6" />
+        </div>
+        <div>
+          <h4 class="text-xs sm:text-sm font-bold text-gray-900">Free Delivery</h4>
+          <p class="text-[11px] text-gray-500">On orders above ₹499</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-purple-50 text-purple-600"
+        >
+          <ng-icon name="lucideShieldCheck" class="size-6" />
+        </div>
+        <div>
+          <h4 class="text-xs sm:text-sm font-bold text-gray-900">Secure Payments</h4>
+          <p class="text-[11px] text-gray-500">100% safe & secure</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-purple-50 text-purple-600"
+        >
+          <ng-icon name="lucideRotateCcw" class="size-6" />
+        </div>
+        <div>
+          <h4 class="text-xs sm:text-sm font-bold text-gray-900">Easy Returns</h4>
+          <p class="text-[11px] text-gray-500">7-day return policy</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-purple-50 text-purple-600"
+        >
+          <ng-icon name="lucideBadgeCheck" class="size-6" />
+        </div>
+        <div>
+          <h4 class="text-xs sm:text-sm font-bold text-gray-900">Genuine Products</h4>
+          <p class="text-[11px] text-gray-500">Direct from trusted brands</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 7. FOOTER                                                -->
+  <!-- ======================================================== -->
+  <footer class="rounded-3xl border border-gray-100 bg-white p-6 sm:p-10 shadow-2xs space-y-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
+      <!-- Brand & Bio -->
+      <div class="lg:col-span-2 space-y-3">
+        <div class="flex items-center gap-2">
+          <div
+            class="flex size-8 items-center justify-center rounded-xl bg-purple-600 text-white shadow-xs"
+          >
+            <ng-icon name="lucideShoppingBag" class="size-4" />
+          </div>
+          <span class="text-gray-900 font-extrabold text-xl tracking-tight"
+            >Shop<span class="text-purple-600">Ease</span></span
+          >
+        </div>
+        <p class="text-xs sm:text-sm text-gray-500 max-w-sm leading-relaxed">
+          Your one-stop destination for modern online shopping. Explore top-rated fashion, electronics,
+          fragrances, and lifestyle products with lightning-fast delivery.
+        </p>
+        <!-- Social Badges -->
+        <div class="flex items-center gap-2 pt-1">
+          <span
+            class="flex size-8 items-center justify-center rounded-xl bg-gray-100 text-gray-700 font-bold text-xs hover:bg-purple-100 hover:text-purple-700 cursor-pointer transition-colors"
+            >IG</span
+          >
+          <span
+            class="flex size-8 items-center justify-center rounded-xl bg-gray-100 text-gray-700 font-bold text-xs hover:bg-purple-100 hover:text-purple-700 cursor-pointer transition-colors"
+            >YT</span
+          >
+          <span
+            class="flex size-8 items-center justify-center rounded-xl bg-gray-100 text-gray-700 font-bold text-xs hover:bg-purple-100 hover:text-purple-700 cursor-pointer transition-colors"
+            >FB</span
+          >
+          <span
+            class="flex size-8 items-center justify-center rounded-xl bg-gray-100 text-gray-700 font-bold text-xs hover:bg-purple-100 hover:text-purple-700 cursor-pointer transition-colors"
+            >X</span
+          >
+        </div>
+      </div>
+
+      <!-- Links: Shop -->
+      <div class="space-y-2.5">
+        <h4 class="text-sm font-bold text-gray-900">Shop</h4>
+        <ul class="space-y-1.5 text-xs sm:text-sm text-gray-500">
+          <li>
+            <button
+              type="button"
+              (click)="store.setSelectedCategory('All')"
+              class="hover:text-purple-600 transition-colors"
+            >
+              All Products
+            </button>
+          </li>
+          <li><a href="#categories" class="hover:text-purple-600 transition-colors">Categories</a></li>
+          <li><a href="#flash-deals" class="hover:text-purple-600 transition-colors">Flash Deals</a></li>
+          <li><a href="#new-arrivals" class="hover:text-purple-600 transition-colors">New Arrivals</a></li>
+        </ul>
+      </div>
+
+      <!-- Links: Help -->
+      <div class="space-y-2.5">
+        <h4 class="text-sm font-bold text-gray-900">Help</h4>
+        <ul class="space-y-1.5 text-xs sm:text-sm text-gray-500">
+          <li><a href="#" class="hover:text-purple-600 transition-colors">Track Order</a></li>
+          <li><a href="#" class="hover:text-purple-600 transition-colors">Returns & Refunds</a></li>
+          <li><a href="#" class="hover:text-purple-600 transition-colors">FAQs</a></li>
+          <li><a href="#" class="hover:text-purple-600 transition-colors">Contact Support</a></li>
+        </ul>
+      </div>
+
+      <!-- Links: Get the App -->
+      <div class="space-y-2.5">
+        <h4 class="text-sm font-bold text-gray-900">Get the App</h4>
+        <p class="text-xs text-gray-500">Download for iOS & Android.</p>
+        <div class="flex flex-col gap-2 pt-1">
+          <div
+            class="rounded-xl bg-gray-900 px-3 py-2 text-white hover:bg-black transition-colors cursor-pointer w-fit"
+          >
+            <span class="text-[9px] uppercase tracking-wider text-gray-400 block leading-none"
+              >GET IT ON</span
+            >
+            <strong class="text-xs font-bold text-white">Google Play</strong>
+          </div>
+          <div
+            class="rounded-xl bg-gray-900 px-3 py-2 text-white hover:bg-black transition-colors cursor-pointer w-fit"
+          >
+            <span class="text-[9px] uppercase tracking-wider text-gray-400 block leading-none"
+              >Download on the</span
+            >
+            <strong class="text-xs font-bold text-white">App Store</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div
+      class="border-t border-gray-100 pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400 text-center sm:text-left"
+    >
+      <p>© 2026 ShopEase, Inc. All rights reserved.</p>
+      <div class="flex items-center gap-4">
+        <a href="#" class="hover:text-gray-600">Privacy Policy</a>
+        <a href="#" class="hover:text-gray-600">Terms of Service</a>
+        <a href="#" class="hover:text-gray-600">Security</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================================================== -->
+  <!-- 8. PRODUCT QUICK VIEW MODAL                              -->
+  <!-- ======================================================== -->
+  @if (quickViewProduct(); as product) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div class="fixed inset-0 bg-black/50 backdrop-blur-xs" (click)="closeQuickView()"></div>
+
+      <div
+        class="relative z-50 w-full max-w-2xl rounded-3xl bg-white p-6 sm:p-8 shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden"
+      >
+        <!-- Close Button -->
+        <button
+          type="button"
+          (click)="closeQuickView()"
+          class="absolute right-4 top-4 flex size-8 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+        >
+          <ng-icon name="lucideX" class="size-5" />
+        </button>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+          <!-- Product Image -->
+          <div
+            class="aspect-square rounded-2xl bg-gray-50/80 p-6 flex items-center justify-center border border-gray-100"
+          >
+            <img [src]="product.image" [alt]="product.title" class="size-full object-contain" />
+          </div>
+
+          <!-- Product Details & Actions -->
+          <div class="space-y-4">
+            <span class="rounded-lg bg-purple-50 px-2.5 py-1 text-xs font-bold text-purple-700">
+              {{ product.category }}
+            </span>
+
+            <h3 class="text-xl sm:text-2xl font-black text-gray-900">{{ product.title }}</h3>
+
+            <!-- Rating -->
+            <div class="flex items-center gap-1.5 text-xs">
+              <ng-icon name="lucideStar" class="size-4 text-amber-400 fill-amber-400" />
+              <span class="font-bold text-gray-900 text-sm">{{ product.rating }}</span>
+              <span class="text-gray-400">({{ product.reviewsCount }} verified reviews)</span>
+            </div>
+
+            <!-- Price & Savings -->
+            <div class="flex items-baseline gap-2 pt-1">
+              <span class="text-2xl font-black text-gray-900">₹{{ product.price | number }}</span>
+              <span class="text-sm text-gray-400 line-through">₹{{ product.originalPrice | number }}</span>
+              @if (product.discountPercent) {
+                <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md">
+                  Save {{ product.discountPercent }}%
+                </span>
+              }
+            </div>
+
+            <p class="text-xs text-gray-600 leading-relaxed">
+              {{ product.description }}
+            </p>
+
+            <!-- Quantity & Actions -->
+            <div class="space-y-3 pt-2">
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-gray-700">Quantity:</span>
+                <div class="flex items-center rounded-xl border border-gray-200 bg-white">
+                  <button
+                    type="button"
+                    (click)="adjustQuickViewQuantity(-1)"
+                    class="flex size-8 items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
+                  >
+                    <ng-icon name="lucideMinus" class="size-3.5" />
+                  </button>
+                  <span class="w-8 text-center text-xs font-bold text-gray-800">
+                    {{ quickViewQuantity() }}
+                  </span>
+                  <button
+                    type="button"
+                    (click)="adjustQuickViewQuantity(1)"
+                    class="flex size-8 items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
+                  >
+                    <ng-icon name="lucidePlus" class="size-3.5" />
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 pt-1">
+                <button
+                  type="button"
+                  (click)="quickViewAddToCart()"
+                  class="flex-1 flex items-center justify-center gap-2 rounded-xl bg-purple-600 py-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-purple-600/30 hover:bg-purple-700 transition-all cursor-pointer"
+                >
+                  <ng-icon name="lucideShoppingCart" class="size-4" />
+                  <span>Add to Cart (₹{{ product.price * quickViewQuantity() | number }})</span>
+                </button>
+                <button
+                  type="button"
+                  (click)="toggleWishlist(product, $event)"
+                  [class]="
+                    isWishlisted(product.id)
+                      ? 'flex size-11 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-600 shadow-2xs transition-all'
+                      : 'flex size-11 items-center justify-center rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-400 transition-all'
+                  "
+                  aria-label="Wishlist"
+                >
+                  <ng-icon
+                    name="lucideHeart"
+                    [class]="
+                      isWishlisted(product.id)
+                        ? 'size-5 text-rose-600 [&_svg]:fill-rose-600 [&_svg]:stroke-rose-600 scale-110'
+                        : 'size-5 text-gray-400'
+                    "
+                  />
+                </button>
+              </div>
+
+              <div class="pt-2 text-center">
+                <a
+                  [routerLink]="['/product', product.id]"
+                  (click)="closeQuickView()"
+                  class="text-xs font-bold text-purple-600 hover:text-purple-700 hover:underline inline-flex items-center gap-1"
+                >
+                  <span>Open Dedicated Product Page</span>
+                  <ng-icon name="lucideArrowRight" class="size-3" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

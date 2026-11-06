@@ -1,3 +1,66 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+@import '@spartan-ng/brain/hlm-tailwind-preset.css';
+@source "../libs";
+
+:root {
+  color-scheme: light;
+
+  /* Base */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+
+  /* Card */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+
+  /* Popover */
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+
+  /* Primary - Your Purple Color */
+  --primary: oklch(60.6% 0.25 292.717);
+  --primary-foreground: oklch(0.985 0 0);
+
+  /* Secondary */
+  --secondary: oklch(0.96 0.015 292.717);
+  --secondary-foreground: oklch(0.25 0.04 292.717);
+
+  /* Muted */
+  --muted: oklch(0.97 0.01 292.717);
+  --muted-foreground: oklch(0.50 0.025 292.717);
+
+  /* Accent */
+  --accent: oklch(0.94 0.04 292.717);
+  --accent-foreground: oklch(0.30 0.08 292.717);
+
+  /* Destructive */
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  /* Border & Input */
+  --border: oklch(0.91 0.015 292.717);
+  --input: oklch(0.91 0.015 292.717);
+  --ring: oklch(60.6% 0.25 292.717);
+
+  /* Charts */
+  --chart-1: oklch(60.6% 0.25 292.717);
+  --chart-2: oklch(0.65 0.18 250);
+  --chart-3: oklch(0.70 0.16 180);
+  --chart-4: oklch(0.75 0.18 90);
+  --chart-5: oklch(0.65 0.20 30);
+
+  /* Sidebar - Purple Theme */
+  --sidebar: oklch(60.6% 0.25 292.717);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.985 0 0);
+  --sidebar-primary-foreground: oklch(60.6% 0.25 292.717);
+  --sidebar-accent: oklch(52% 0.22 292.717);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(54% 0.2 292.717);
+  --sidebar-ring: oklch(0.985 0 0);
+
+  /* Radius */
+  --radius: 0.625rem;
+}

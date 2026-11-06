@@ -1,0 +1,130 @@
+<div class="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+  <!-- Flash Deals Hero Banner -->
+  <div class="rounded-3xl bg-gradient-to-r from-rose-600 via-purple-600 to-indigo-700 text-white p-6 sm:p-10 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="space-y-3 text-center md:text-left">
+      <div class="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-3.5 py-1 text-xs font-bold text-white shadow-xs">
+        <ng-icon name="lucideZap" class="size-4 text-amber-300" />
+        <span>LIMITED TIME FLASH SALE</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight">Super Flash Deals</h1>
+      <p class="text-sm text-purple-100 max-w-md">
+        Massive discounts up to 60% off across premium electronics, luxury fragrances, and apparel. While stocks last!
+      </p>
+    </div>
+
+    <!-- Live Timer Card -->
+    <div class="rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-4 sm:p-6 text-center space-y-2">
+      <span class="text-xs uppercase tracking-wider font-bold text-purple-200">Deals Expire In</span>
+      <div class="flex items-center gap-2">
+        <div class="rounded-xl bg-white text-gray-900 px-3 py-2 min-w-14">
+          <span class="text-xl sm:text-2xl font-black block">{{ countdown().hours }}</span>
+          <span class="text-[9px] font-bold text-gray-400 uppercase">Hours</span>
+        </div>
+        <span class="text-xl font-bold">:</span>
+        <div class="rounded-xl bg-white text-gray-900 px-3 py-2 min-w-14">
+          <span class="text-xl sm:text-2xl font-black block">{{ countdown().minutes }}</span>
+          <span class="text-[9px] font-bold text-gray-400 uppercase">Mins</span>
+        </div>
+        <span class="text-xl font-bold">:</span>
+        <div class="rounded-xl bg-white text-gray-900 px-3 py-2 min-w-14">
+          <span class="text-xl sm:text-2xl font-black block text-rose-600">{{ countdown().seconds }}</span>
+          <span class="text-[9px] font-bold text-gray-400 uppercase">Secs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deals Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+    @for (deal of deals(); track deal.product.id) {
+      <div
+        [routerLink]="['/product', deal.product.id]"
+        class="rounded-2xl border border-gray-100 bg-white p-4 shadow-2xs hover:shadow-md hover:border-purple-200 transition-all flex flex-col justify-between space-y-3 cursor-pointer"
+      >
+        <!-- Badge & Wishlist -->
+        <div class="flex items-center justify-between">
+          <span class="rounded-md bg-rose-600 text-white px-2 py-0.5 text-xs font-bold shadow-xs">
+            -{{ deal.product.discountPercent }}% OFF
+          </span>
+          <button
+            type="button"
+            (click)="toggleWishlist(deal.product, $event)"
+            [class]="
+              isWishlisted(deal.product.id)
+                ? 'flex size-7 items-center justify-center rounded-full bg-rose-50 text-rose-600 shadow-2xs transition-all'
+                : 'flex size-7 items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 transition-all'
+            "
+          >
+            <ng-icon
+              name="lucideHeart"
+              [class]="
+                isWishlisted(deal.product.id)
+                  ? 'size-4 text-rose-600 [&_svg]:fill-rose-600 [&_svg]:stroke-rose-600 scale-110'
+                  : 'size-4 text-gray-400'
+              "
+            />
+          </button>
+        </div>
+
+        <!-- Image -->
+        <div class="aspect-4/3 w-full rounded-xl bg-gray-50/70 p-3 flex items-center justify-center overflow-hidden">
+          <img
+            [src]="deal.product.image"
+            [alt]="deal.product.title"
+            class="h-full w-full object-contain hover:scale-105 transition-transform"
+          />
+        </div>
+
+        <!-- Details -->
+        <div class="space-y-1">
+          <span class="text-[10px] font-bold text-purple-600 uppercase">{{ deal.product.category }}</span>
+          <a
+            [routerLink]="['/product', deal.product.id]"
+            class="text-sm font-bold text-gray-900 truncate hover:text-purple-600 transition-colors block cursor-pointer"
+            [title]="deal.product.title"
+          >
+            {{ deal.product.title }}
+          </a>
+
+          <div class="flex items-baseline gap-2 pt-1">
+            <span class="text-lg font-black text-gray-900">₹{{ deal.product.price | number }}</span>
+            <span class="text-xs text-gray-400 line-through">₹{{ deal.product.originalPrice | number }}</span>
+          </div>
+
+          <!-- Claim progress bar -->
+          <div class="space-y-1 pt-2">
+            <div class="flex justify-between text-[11px] font-semibold text-gray-500">
+              <span>Already Claimed</span>
+              <strong class="text-rose-600">{{ deal.claimedPercent }}%</strong>
+            </div>
+            <div class="h-1.5 w-full rounded-full bg-gray-100 overflow-hidden">
+              <div
+                class="h-full bg-gradient-to-r from-amber-500 to-rose-600 rounded-full"
+                [style.width.%]="deal.claimedPercent"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grab Deal Button -->
+        <button
+          type="button"
+          (click)="grabDeal(deal.product, $event)"
+          [class]="
+            addedProducts()[deal.product.id]
+              ? 'w-full flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white shadow-xs transition-all'
+              : 'w-full flex items-center justify-center gap-1.5 rounded-xl bg-purple-600 py-2.5 text-xs font-bold text-white shadow-md shadow-purple-600/30 hover:bg-purple-700 transition-all cursor-pointer'
+          "
+        >
+          @if (addedProducts()[deal.product.id]) {
+            <span>✓ Added to Cart</span>
+          } @else {
+            <ng-icon name="lucideZap" class="size-3.5 text-amber-300" />
+            <span>Grab Deal</span>
+          }
+        </button>
+      </div>
+    }
+  </div>
+</div>
+

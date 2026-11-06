@@ -1,0 +1,133 @@
+<div class="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+  <!-- Trending Header -->
+  <div class="rounded-3xl bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-rose-500/10 border border-purple-200/60 p-6 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
+    <div class="space-y-2 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 rounded-full bg-amber-500/15 text-amber-700 px-3.5 py-1 text-xs font-bold">
+        <ng-icon name="lucideFlame" class="size-4 text-amber-600" />
+        <span>Hot Picks This Week</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">Trending & Bestsellers</h1>
+      <p class="text-sm text-gray-600 max-w-lg">
+        The most popular items shoppers are buying right now, with verified ratings and limited-time discounts.
+      </p>
+    </div>
+
+    <!-- Quick Filter Tabs -->
+    <div class="flex items-center gap-2 bg-white/90 p-1.5 rounded-2xl border border-gray-200 shadow-2xs">
+      <button
+        type="button"
+        (click)="activeFilter.set('all')"
+        [class]="activeFilter() === 'all' ? 'rounded-xl bg-purple-600 text-white px-3.5 py-1.5 text-xs font-bold shadow-xs' : 'rounded-xl text-gray-600 hover:text-gray-900 px-3.5 py-1.5 text-xs font-semibold'"
+      >
+        All Trending
+      </button>
+      <button
+        type="button"
+        (click)="activeFilter.set('electronics')"
+        [class]="activeFilter() === 'electronics' ? 'rounded-xl bg-purple-600 text-white px-3.5 py-1.5 text-xs font-bold shadow-xs' : 'rounded-xl text-gray-600 hover:text-gray-900 px-3.5 py-1.5 text-xs font-semibold'"
+      >
+        Tech
+      </button>
+      <button
+        type="button"
+        (click)="activeFilter.set('fashion')"
+        [class]="activeFilter() === 'fashion' ? 'rounded-xl bg-purple-600 text-white px-3.5 py-1.5 text-xs font-bold shadow-xs' : 'rounded-xl text-gray-600 hover:text-gray-900 px-3.5 py-1.5 text-xs font-semibold'"
+      >
+        Fashion
+      </button>
+    </div>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-5">
+    @for (product of trendingList(); track product.id) {
+      <div
+        [routerLink]="['/product', product.id]"
+        class="group relative flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-3 shadow-2xs hover:shadow-md hover:border-purple-200 transition-all cursor-pointer"
+      >
+        <!-- Badge & Wishlist Button -->
+        <div class="flex items-center justify-between mb-2">
+          @if (product.discountPercent) {
+            <span class="rounded-md bg-rose-50 px-2 py-0.5 text-[10px] sm:text-xs font-bold text-rose-600">
+              -{{ product.discountPercent }}%
+            </span>
+          }
+          <button
+            type="button"
+            (click)="toggleWishlist(product, $event)"
+            [class]="
+              isWishlisted(product.id)
+                ? 'ml-auto flex size-7 items-center justify-center rounded-full bg-rose-50 text-rose-600 shadow-2xs transition-all'
+                : 'ml-auto flex size-7 items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 group-hover:text-gray-600 transition-all'
+            "
+            aria-label="Save to Wishlist"
+          >
+            <ng-icon
+              name="lucideHeart"
+              [class]="
+                isWishlisted(product.id)
+                  ? 'size-4 text-rose-600 [&_svg]:fill-rose-600 [&_svg]:stroke-rose-600 scale-110'
+                  : 'size-4 text-gray-400'
+              "
+            />
+          </button>
+        </div>
+
+        <!-- Product Image -->
+        <div
+          class="relative w-full aspect-square flex items-center justify-center overflow-hidden rounded-xl bg-gray-50/60 p-2"
+        >
+          <img
+            [src]="product.image"
+            [alt]="product.title"
+            class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+
+        <!-- Details -->
+        <div class="mt-2.5 space-y-1">
+          <span class="text-[10px] font-bold text-purple-600 uppercase tracking-wider block">
+            {{ product.category }}
+          </span>
+          <a
+            [routerLink]="['/product', product.id]"
+            class="text-xs sm:text-sm font-bold text-gray-900 truncate hover:text-purple-600 transition-colors block cursor-pointer"
+            [title]="product.title"
+          >
+            {{ product.title }}
+          </a>
+
+          <div class="flex items-center gap-1 text-[11px] sm:text-xs">
+            <ng-icon name="lucideStar" class="size-3.5 text-amber-400 fill-amber-400" />
+            <span class="font-bold text-gray-800">{{ product.rating }}</span>
+            <span class="text-gray-400">({{ product.reviewsCount }})</span>
+          </div>
+
+          <div class="flex items-baseline gap-1.5 pt-0.5">
+            <span class="text-sm sm:text-base font-extrabold text-gray-900">₹{{ product.price | number }}</span>
+            <span class="text-[10px] sm:text-xs text-gray-400 line-through">₹{{ product.originalPrice | number }}</span>
+          </div>
+        </div>
+
+        <!-- Add to Cart Button -->
+        <button
+          type="button"
+          (click)="addToCart(product, $event)"
+          [class]="
+            addedProducts()[product.id]
+              ? 'mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-2 text-xs font-bold text-white shadow-xs transition-all'
+              : 'mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-purple-200 bg-purple-50/80 py-2 text-xs font-bold text-purple-700 hover:bg-purple-600 hover:text-white transition-all shadow-xs cursor-pointer'
+          "
+        >
+          @if (addedProducts()[product.id]) {
+            <span>✓ Added</span>
+          } @else {
+            <ng-icon name="lucideShoppingCart" class="size-3.5" />
+            <span>Add to Cart</span>
+          }
+        </button>
+      </div>
+    }
+  </div>
+</div>
+

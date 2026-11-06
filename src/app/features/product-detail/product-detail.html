@@ -1,0 +1,321 @@
+<div class="w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-8">
+  @if (product(); as item) {
+    <!-- Breadcrumbs & Back Navigation -->
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4">
+      <div class="flex items-center gap-2 text-xs sm:text-sm text-gray-500 font-medium">
+        <a [routerLink]="['/dashboard']" class="hover:text-purple-600 transition-colors flex items-center gap-1">
+          <ng-icon name="lucideArrowLeft" class="size-3.5" />
+          <span>Back</span>
+        </a>
+        <span class="text-gray-300">/</span>
+        <a [routerLink]="['/categories']" class="hover:text-purple-600 transition-colors">Categories</a>
+        <span class="text-gray-300">/</span>
+        <span class="text-purple-600 font-semibold">{{ item.category }}</span>
+        <span class="text-gray-300">/</span>
+        <span class="text-gray-800 font-semibold truncate max-w-xs">{{ item.title }}</span>
+      </div>
+
+      <button
+        type="button"
+        (click)="copyShareLink()"
+        class="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
+      >
+        <ng-icon name="lucideShare2" class="size-3.5" />
+        <span>Share</span>
+      </button>
+    </div>
+
+    <!-- Main Product Section (2-Column Grid) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      <!-- Left Column: Product Visual Showcase (5 Cols) -->
+      <div class="lg:col-span-5 space-y-4">
+        <!-- Main Large Preview -->
+        <div class="relative w-full aspect-square rounded-3xl border border-gray-100 bg-white p-6 sm:p-10 shadow-xs flex items-center justify-center overflow-hidden group">
+          <!-- Discount Badge -->
+          @if (item.discountPercent && item.discountPercent > 0) {
+            <div class="absolute left-4 top-4 z-10 rounded-xl bg-rose-600 px-3 py-1 text-xs font-extrabold text-white shadow-xs">
+              -{{ item.discountPercent }}% OFF
+            </div>
+          }
+
+          <!-- Wishlist Heart Button -->
+          <button
+            type="button"
+            (click)="toggleWishlist(item, $event)"
+            [class]="
+              isWishlisted(item.id)
+                ? 'absolute right-4 top-4 z-10 flex size-10 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 shadow-sm border border-rose-200 transition-all scale-105'
+                : 'absolute right-4 top-4 z-10 flex size-10 items-center justify-center rounded-2xl bg-white/90 text-gray-400 hover:bg-gray-100 hover:text-gray-600 shadow-sm border border-gray-100 transition-all'
+            "
+            aria-label="Wishlist"
+          >
+            <ng-icon
+              name="lucideHeart"
+              [class]="
+                isWishlisted(item.id)
+                  ? 'size-5 text-rose-600 [&_svg]:fill-rose-600 [&_svg]:stroke-rose-600 scale-110'
+                  : 'size-5 text-gray-400'
+              "
+            />
+          </button>
+
+          <!-- Product Image -->
+          <img
+            [src]="item.image"
+            [alt]="item.title"
+            class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
+
+        <!-- Trust Badges Under Image -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
+          <div class="flex flex-col items-center p-3 rounded-2xl bg-purple-50/50 border border-purple-100/60 text-center">
+            <ng-icon name="lucideTruck" class="size-5 text-purple-600 mb-1" />
+            <span class="text-[11px] font-bold text-gray-800">Free Delivery</span>
+            <span class="text-[10px] text-gray-500">Above ₹499</span>
+          </div>
+
+          <div class="flex flex-col items-center p-3 rounded-2xl bg-purple-50/50 border border-purple-100/60 text-center">
+            <ng-icon name="lucideRotateCcw" class="size-5 text-purple-600 mb-1" />
+            <span class="text-[11px] font-bold text-gray-800">7 Days Return</span>
+            <span class="text-[10px] text-gray-500">Easy exchange</span>
+          </div>
+
+          <div class="flex flex-col items-center p-3 rounded-2xl bg-purple-50/50 border border-purple-100/60 text-center">
+            <ng-icon name="lucideShieldCheck" class="size-5 text-purple-600 mb-1" />
+            <span class="text-[11px] font-bold text-gray-800">100% Genuine</span>
+            <span class="text-[10px] text-gray-500">Quality assured</span>
+          </div>
+
+          <div class="flex flex-col items-center p-3 rounded-2xl bg-purple-50/50 border border-purple-100/60 text-center">
+            <ng-icon name="lucideBadgeCheck" class="size-5 text-purple-600 mb-1" />
+            <span class="text-[11px] font-bold text-gray-800">Top Rated</span>
+            <span class="text-[10px] text-gray-500">4.5+ customer score</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Product Details & Purchase Actions (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
+        <div>
+          <!-- Category & Stock Status -->
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-100 text-purple-700">
+              {{ item.category }}
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              In Stock & Ready to Ship
+            </span>
+          </div>
+
+          <!-- Product Title -->
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
+            {{ item.title }}
+          </h1>
+
+          <!-- Ratings & Reviews -->
+          <div class="mt-2.5 flex items-center gap-3">
+            <div class="flex items-center gap-1 bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-xl text-xs font-bold text-amber-800">
+              <ng-icon name="lucideStar" class="size-3.5 fill-amber-400 text-amber-400" />
+              <span>{{ item.rating }}</span>
+            </div>
+            <span class="text-xs text-gray-500 font-medium">{{ item.reviewsCount }} ratings & customer reviews</span>
+            <span class="text-gray-300">•</span>
+            <span class="text-xs text-purple-700 font-semibold">Verified Buyer Choice</span>
+          </div>
+        </div>
+
+        <!-- Pricing Block -->
+        <div class="rounded-2xl bg-linear-to-r from-purple-50/40 via-white to-purple-50/20 border border-purple-100/80 p-4 sm:p-5">
+          <div class="flex flex-wrap items-baseline gap-3">
+            <span class="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
+              ₹{{ item.price | number }}
+            </span>
+            @if (item.originalPrice > item.price) {
+              <span class="text-lg text-gray-400 line-through">
+                ₹{{ item.originalPrice | number }}
+              </span>
+              <span class="text-xs font-extrabold text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
+                Save ₹{{ item.originalPrice - item.price | number }} ({{ item.discountPercent }}% OFF)
+              </span>
+            }
+          </div>
+          <p class="text-[11px] text-gray-500 mt-1.5">Inclusive of all taxes. Free shipping on this item.</p>
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-2">
+          <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">Overview</h3>
+          <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+            {{ item.description || 'Premium build quality designed for daily reliability and performance. Backed by ShopEase official guarantee and authentic customer satisfaction.' }}
+          </p>
+        </div>
+
+        <!-- Features / Key Highlights -->
+        <div class="space-y-2.5">
+          <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">Highlights</h3>
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-gray-700">
+            <li class="flex items-center gap-2">
+              <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-purple-100 text-purple-700">
+                <ng-icon name="lucideCheck" class="size-3" />
+              </span>
+              <span>100% Genuine brand guarantee</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-purple-100 text-purple-700">
+                <ng-icon name="lucideCheck" class="size-3" />
+              </span>
+              <span>Express 24-48h dispatch available</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-purple-100 text-purple-700">
+                <ng-icon name="lucideCheck" class="size-3" />
+              </span>
+              <span>Cash on Delivery (COD) supported</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-purple-100 text-purple-700">
+                <ng-icon name="lucideCheck" class="size-3" />
+              </span>
+              <span>1-Year comprehensive warranty</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Quantity & Purchase Actions -->
+        <div class="space-y-4 pt-4 border-t border-gray-100">
+          <div class="flex items-center gap-4">
+            <span class="text-xs font-bold text-gray-700 uppercase tracking-wider">Quantity:</span>
+            <div class="flex items-center rounded-xl border border-gray-200 bg-white shadow-2xs">
+              <button
+                type="button"
+                (click)="decrementQty()"
+                class="flex size-9 items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors rounded-l-xl cursor-pointer"
+                aria-label="Decrease quantity"
+              >
+                <ng-icon name="lucideMinus" class="size-3.5" />
+              </button>
+              <span class="w-10 text-center text-sm font-bold text-gray-900">
+                {{ quantity() }}
+              </span>
+              <button
+                type="button"
+                (click)="incrementQty()"
+                class="flex size-9 items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors rounded-r-xl cursor-pointer"
+                aria-label="Increase quantity"
+              >
+                <ng-icon name="lucidePlus" class="size-3.5" />
+              </button>
+            </div>
+            <span class="text-xs text-gray-400">Total: <strong class="text-gray-900">₹{{ item.price * quantity() | number }}</strong></span>
+          </div>
+
+          <!-- Buttons Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              type="button"
+              (click)="addToCart()"
+              [class]="
+                isJustAdded()
+                  ? 'flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-3.5 px-6 text-sm font-bold text-white shadow-md transition-all'
+                  : 'flex items-center justify-center gap-2 rounded-2xl bg-purple-50 border-2 border-purple-600 py-3.5 px-6 text-sm font-bold text-purple-700 hover:bg-purple-100 transition-all cursor-pointer'
+              "
+            >
+              @if (isJustAdded()) {
+                <ng-icon name="lucideCheck" class="size-5" />
+                <span>Added to Cart!</span>
+              } @else {
+                <ng-icon name="lucideShoppingCart" class="size-5" />
+                <span>Add to Cart</span>
+              }
+            </button>
+
+            <button
+              type="button"
+              (click)="buyNow()"
+              class="flex items-center justify-center gap-2 rounded-2xl bg-purple-600 py-3.5 px-6 text-sm font-bold text-white shadow-md shadow-purple-600/30 hover:bg-purple-700 active:scale-98 transition-all cursor-pointer"
+            >
+              <span>Buy Now</span>
+              <ng-icon name="lucideArrowRight" class="size-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products Section -->
+    <div class="pt-8 border-t border-gray-100 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
+          <ng-icon name="lucideSparkles" class="size-5 text-purple-600" />
+          <span>Similar Products You Might Like</span>
+        </h2>
+        <a [routerLink]="['/categories']" class="text-xs sm:text-sm font-bold text-purple-600 hover:text-purple-700">
+          View All →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5">
+        @for (rel of relatedProducts(); track rel.id) {
+          <a
+            [routerLink]="['/product', rel.id]"
+            class="group relative flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-3 shadow-2xs hover:shadow-lg hover:border-purple-200 transition-all cursor-pointer"
+          >
+            <!-- Badge -->
+            <div class="flex items-center justify-between mb-2">
+              @if (rel.discountPercent && rel.discountPercent > 0) {
+                <span class="rounded-md bg-rose-50 px-2 py-0.5 text-xs font-bold text-rose-600">
+                  -{{ rel.discountPercent }}%
+                </span>
+              } @else {
+                <span></span>
+              }
+            </div>
+
+            <!-- Image -->
+            <div class="aspect-square w-full rounded-xl bg-gray-50/70 p-3 flex items-center justify-center overflow-hidden">
+              <img
+                [src]="rel.image"
+                [alt]="rel.title"
+                class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+            </div>
+
+            <!-- Content -->
+            <div class="mt-3">
+              <span class="text-[11px] font-semibold text-purple-600 uppercase">{{ rel.category }}</span>
+              <h4 class="text-xs sm:text-sm font-bold text-gray-900 group-hover:text-purple-600 line-clamp-1">
+                {{ rel.title }}
+              </h4>
+              <div class="mt-1 flex items-center justify-between">
+                <span class="text-sm font-extrabold text-gray-900">₹{{ rel.price | number }}</span>
+                <span class="text-xs text-gray-400">★ {{ rel.rating }}</span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    </div>
+  } @else {
+    <!-- Fallback if product not found -->
+    <div class="rounded-3xl border border-dashed border-gray-200 bg-white p-12 text-center max-w-lg mx-auto space-y-4">
+      <div class="mx-auto flex size-16 items-center justify-center rounded-2xl bg-purple-50 text-purple-600">
+        <ng-icon name="lucideShoppingBag" class="size-8" />
+      </div>
+      <h3 class="text-xl font-bold text-gray-900">Product Not Found</h3>
+      <p class="text-xs sm:text-sm text-gray-500">
+        The item you are looking for may have been moved or is no longer available.
+      </p>
+      <a
+        [routerLink]="['/dashboard']"
+        class="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-purple-700 transition-colors"
+      >
+        <ng-icon name="lucideArrowLeft" class="size-4" />
+        Back to Store
+      </a>
+    </div>
+  }
+</div>
+
