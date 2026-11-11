@@ -1,19 +1,14 @@
 <div class="w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6">
   <!-- Page Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-100 pb-5">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-100 dark:border-gray-800 pb-5">
     <div>
-      <div class="flex items-center gap-2 text-xs font-medium text-gray-500 mb-1">
-        <a [routerLink]="['/dashboard']" class="hover:text-purple-600">Home</a>
-        <ng-icon name="lucideChevronRight" class="size-3 text-gray-400" />
-        <span class="text-purple-700 font-semibold">Wishlist</span>
-      </div>
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2.5">
-        <span class="flex size-9 items-center justify-center rounded-xl bg-rose-100 text-rose-600">
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight flex items-center gap-2.5">
+        <span class="flex size-9 items-center justify-center rounded-xl bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400">
           <ng-icon name="lucideHeart" class="size-5 [&_svg]:fill-rose-600" />
         </span>
         My Wishlist
       </h1>
-      <p class="text-xs sm:text-sm text-gray-500 mt-1">
+      <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
         Your saved favorites and dream items all in one place
       </p>
     </div>
@@ -21,13 +16,13 @@
     <!-- Actions & Stats -->
     @if (store.wishlistedProducts().length > 0) {
       <div class="flex flex-wrap items-center gap-2.5">
-        <span class="bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold px-3 py-1.5 rounded-xl">
+        <span class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-xs font-bold px-3 py-1.5 rounded-xl">
           {{ store.wishlistCount() }} Saved Item{{ store.wishlistCount() > 1 ? 's' : '' }}
         </span>
         <button
           type="button"
           (click)="moveAllToCart()"
-          class="inline-flex items-center gap-1.5 rounded-xl bg-purple-600 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-purple-700 transition-colors"
+          class="inline-flex items-center gap-1.5 rounded-xl bg-purple-600 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-purple-700 transition-colors cursor-pointer"
         >
           <ng-icon name="lucideShoppingCart" class="size-4" />
           Move All to Cart
@@ -35,7 +30,7 @@
         <button
           type="button"
           (click)="clearWishlist()"
-          class="inline-flex items-center gap-1 rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 transition-colors"
+          class="inline-flex items-center gap-1 rounded-xl border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
         >
           <ng-icon name="lucideTrash2" class="size-3.5" />
           Clear
@@ -50,7 +45,7 @@
       @for (product of store.wishlistedProducts(); track product.id) {
         <div
           [routerLink]="['/product', product.id]"
-          class="group relative flex flex-col justify-between rounded-2xl border border-gray-200/80 bg-white p-3 shadow-2xs hover:shadow-lg hover:border-purple-200 transition-all cursor-pointer"
+          class="group relative flex flex-col justify-between rounded-2xl border border-gray-200/80 dark:border-gray-800 bg-white dark:bg-gray-900 p-3 shadow-2xs hover:shadow-lg hover:border-purple-200 dark:hover:border-purple-800 transition-all cursor-pointer"
         >
           <!-- Top Badges & Remove Button -->
           <div class="flex items-center justify-between gap-1 mb-2">
@@ -64,7 +59,7 @@
             <button
               type="button"
               (click)="removeFromWishlist(product, $event)"
-              class="flex size-7 items-center justify-center rounded-full bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors shadow-2xs"
+              class="flex size-7 items-center justify-center rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors shadow-2xs"
               aria-label="Remove from Wishlist"
               title="Remove from Wishlist"
             >
@@ -74,7 +69,7 @@
 
           <!-- Product Image -->
           <div
-            class="relative w-full aspect-square flex items-center justify-center overflow-hidden rounded-xl bg-gray-50/70 p-3"
+            class="relative w-full aspect-square flex items-center justify-center overflow-hidden rounded-xl bg-gray-50/70 dark:bg-gray-800/60 p-3"
           >
             <img
               [src]="product.image"
@@ -87,54 +82,84 @@
           <!-- Product Info -->
           <div class="mt-3 flex flex-1 flex-col justify-between">
             <div>
-              <span class="text-[11px] font-semibold text-purple-600 uppercase tracking-wide">
+              <span class="text-[11px] font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">
                 {{ product.category }}
               </span>
               <a
                 [routerLink]="['/product', product.id]"
-                class="line-clamp-2 text-xs sm:text-sm font-semibold text-gray-900 hover:text-purple-600 transition-colors cursor-pointer block"
+                class="line-clamp-2 text-xs sm:text-sm font-semibold text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer block"
               >
                 {{ product.title }}
               </a>
 
               <!-- Rating -->
               <div class="mt-1 flex items-center gap-1 text-xs">
-                <ng-icon name="lucideStar" class="size-3.5 fill-amber-400 text-amber-400" />
-                <span class="font-bold text-gray-900">{{ product.rating }}</span>
-                <span class="text-gray-400">({{ product.reviewsCount }})</span>
+                <ng-icon name="lucideStar" class="size-3.5 text-amber-400 [&_svg]:fill-amber-400 [&_svg]:stroke-amber-400" />
+                <span class="font-bold text-gray-900 dark:text-white">{{ product.rating }}</span>
+                <span class="text-gray-400 dark:text-gray-500">({{ product.reviewsCount }})</span>
               </div>
             </div>
 
             <!-- Price & Actions -->
-            <div class="mt-3 pt-2 border-t border-gray-100 flex flex-col gap-2">
+            <div class="mt-3 pt-2 border-t border-gray-100 dark:border-gray-800 flex flex-col gap-2">
               <div class="flex items-baseline gap-1.5">
-                <span class="text-sm sm:text-base font-extrabold text-gray-900">
+                <span class="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
                   ₹{{ product.price | number }}
                 </span>
                 @if (product.originalPrice > product.price) {
-                  <span class="text-xs text-gray-400 line-through">
+                  <span class="text-xs text-gray-400 dark:text-gray-500 line-through">
                     ₹{{ product.originalPrice | number }}
                   </span>
                 }
               </div>
 
-              <div class="grid grid-cols-2 gap-1.5">
-                <button
-                  type="button"
-                  (click)="moveToCart(product, $event)"
-                  class="flex items-center justify-center gap-1 rounded-xl bg-purple-600 py-2 text-xs font-bold text-white shadow-2xs hover:bg-purple-700 transition-colors"
+              @if (store.isInCart(product.id)) {
+                <div
+                  class="flex items-center justify-between rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/60 px-2.5 py-1.5 shadow-2xs"
+                  (click)="$event.stopPropagation()"
                 >
-                  <ng-icon name="lucideShoppingCart" class="size-3.5" />
-                  Move to Cart
-                </button>
-                <button
-                  type="button"
-                  (click)="addToCart(product, $event)"
-                  class="flex items-center justify-center gap-1 rounded-xl bg-purple-50 py-2 text-xs font-bold text-purple-700 hover:bg-purple-100 transition-colors border border-purple-200"
-                >
-                  Add +
-                </button>
-              </div>
+                  <span class="flex items-center gap-1 text-xs font-bold text-purple-700 dark:text-purple-300">
+                    <ng-icon name="lucideCheck" class="size-3.5 text-emerald-600" />
+                    <span>In Cart ({{ store.getCartQuantity(product.id) }})</span>
+                  </span>
+                  <div class="flex items-center gap-1">
+                    <button
+                      type="button"
+                      (click)="store.updateQuantity(product.id, -1); $event.stopPropagation()"
+                      class="flex size-6 items-center justify-center rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                      aria-label="Decrease quantity"
+                    >
+                      <ng-icon name="lucideMinus" class="size-3" />
+                    </button>
+                    <button
+                      type="button"
+                      (click)="store.updateQuantity(product.id, 1); $event.stopPropagation()"
+                      class="flex size-6 items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors cursor-pointer"
+                      aria-label="Increase quantity"
+                    >
+                      <ng-icon name="lucidePlus" class="size-3" />
+                    </button>
+                  </div>
+                </div>
+              } @else {
+                <div class="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    (click)="moveToCart(product, $event)"
+                    class="flex items-center justify-center gap-1 rounded-xl bg-purple-600 py-2 text-xs font-bold text-white shadow-2xs hover:bg-purple-700 transition-colors cursor-pointer"
+                  >
+                    <ng-icon name="lucideShoppingCart" class="size-3.5" />
+                    Move to Cart
+                  </button>
+                  <button
+                    type="button"
+                    (click)="addToCart(product, $event)"
+                    class="flex items-center justify-center gap-1 rounded-xl bg-purple-50 dark:bg-purple-950/40 py-2 text-xs font-bold text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50 transition-colors border border-purple-200 dark:border-purple-800/60 cursor-pointer"
+                  >
+                    Add +
+                  </button>
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -142,12 +167,12 @@
     </div>
   } @else {
     <!-- Empty Wishlist State -->
-    <div class="rounded-3xl border border-dashed border-gray-200 bg-white p-8 sm:p-14 text-center max-w-lg mx-auto">
-      <div class="mx-auto flex size-16 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 mb-4 shadow-2xs">
+    <div class="rounded-3xl border border-dashed border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 sm:p-14 text-center max-w-lg mx-auto">
+      <div class="mx-auto flex size-16 items-center justify-center rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 mb-4 shadow-2xs">
         <ng-icon name="lucideHeart" class="size-8 [&_svg]:fill-rose-500 [&_svg]:stroke-rose-500" />
       </div>
-      <h3 class="text-lg font-bold text-gray-900">Your wishlist is empty</h3>
-      <p class="text-xs sm:text-sm text-gray-500 mt-1 mb-6">
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white">Your wishlist is empty</h3>
+      <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 mb-6">
         Explore our trending collections, flash sales, and new arrivals. Tap the heart icon on any product to save it here!
       </p>
       <a

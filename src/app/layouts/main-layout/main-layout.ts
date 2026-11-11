@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideShoppingBag,
@@ -9,6 +10,7 @@ import {
   lucideSearch,
   lucideLayoutGrid,
   lucideChevronDown,
+  lucideChevronRight,
   lucideUser,
   lucidePanelLeft,
   lucideX,
@@ -27,9 +29,16 @@ import {
   lucideZap,
   lucideFlame,
   lucideStar,
+  lucideBell,
+  lucideBellRing,
+  lucideCheckCheck,
+  lucideTag,
+  lucideSun,
+  lucideMoon,
+  lucideHouse,
 } from '@ng-icons/lucide';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
-import { Product, StoreService } from '../../core/services/store.service';
+import { AppNotification, Product, StoreService } from '../../core/services/store.service';
 import { Sidebar } from './sidebar/sidebar';
 
 export interface SearchPageSuggestion {
@@ -68,6 +77,14 @@ export interface SearchPageSuggestion {
       lucideZap,
       lucideFlame,
       lucideStar,
+      lucideBell,
+      lucideBellRing,
+      lucideCheckCheck,
+      lucideTag,
+      lucideChevronRight,
+      lucideSun,
+      lucideMoon,
+      lucideHouse,
     }),
   ],
   selector: 'app-main-layout',
@@ -79,8 +96,65 @@ export class MainLayout {
   private readonly router = inject(Router);
 
   protected readonly isAccountOpen = signal<boolean>(false);
+  protected readonly isNotificationsOpen = signal<boolean>(false);
   protected readonly isMobileSearchOpen = signal<boolean>(false);
   protected readonly isSearchFocused = signal<boolean>(false);
+
+  // Dynamic Routing & Breadcrumb Trail
+  protected readonly currentUrl = signal<string>(this.router.url);
+
+  constructor() {
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        this.currentUrl.set(event.urlAfterRedirects);
+      });
+  }
+
+  protected readonly breadcrumbs = computed<Array<{ label: string; url?: string }>>(() => {
+    const rawUrl = this.currentUrl().split('?')[0].split('#')[0];
+    if (rawUrl === '/' || rawUrl === '/dashboard') {
+      return [];
+    }
+    if (rawUrl === '/categories') {
+      const cat = this.store.selectedCategory();
+      if (cat && cat !== 'All') {
+        return [
+          { label: 'Categories', url: '/categories' },
+          { label: cat },
+        ];
+      }
+      return [{ label: 'Categories Explorer' }];
+    }
+    if (rawUrl === '/trending') {
+      return [{ label: 'Trending Products' }];
+    }
+    if (rawUrl === '/flash-deals') {
+      return [{ label: 'Flash Deals' }];
+    }
+    if (rawUrl === '/orders') {
+      return [{ label: 'My Orders' }];
+    }
+    if (rawUrl === '/wishlist') {
+      return [{ label: 'My Wishlist' }];
+    }
+    if (rawUrl === '/settings' || rawUrl === '/profile') {
+      return [{ label: 'Account & Settings' }];
+    }
+    if (rawUrl.startsWith('/product/')) {
+      const id = rawUrl.split('/product/')[1];
+      const prod = this.store.getProductById(id);
+      if (prod) {
+        return [
+          { label: 'Categories', url: '/categories' },
+          { label: prod.category, url: '/categories' },
+          { label: prod.title },
+        ];
+      }
+      return [{ label: 'Product Details' }];
+    }
+    return [];
+  });
 
   // Searchable Application Navigation Destinations
   private readonly searchablePages: SearchPageSuggestion[] = [
@@ -185,6 +259,30 @@ export class MainLayout {
 
   protected toggleAccount(): void {
     this.isAccountOpen.update((v) => !v);
+    if (this.isAccountOpen()) {
+      this.isNotificationsOpen.set(false);
+    }
+  }
+
+  protected toggleNotifications(): void {
+    this.isNotificationsOpen.update((v) => !v);
+    if (this.isNotificationsOpen()) {
+      this.isAccountOpen.set(false);
+    }
+  }
+
+  protected openNotification(notif: AppNotification): void {
+    this.store.markNotificationAsRead(notif.id);
+    this.isNotificationsOpen.set(false);
+    if (notif.linkUrl) {
+      this.router.navigateByUrl(notif.linkUrl);
+    }
+  }
+
+  protected handleSignOut(): void {
+    this.store.logout();
+    this.isAccountOpen.set(false);
+    this.router.navigate(['/login']);
   }
 
   protected selectCategory(category: string): void {
@@ -204,6 +302,9 @@ export class MainLayout {
     }
     if (!target.closest('[data-dropdown="account"]')) {
       this.isAccountOpen.set(false);
+    }
+    if (!target.closest('[data-dropdown="notifications"]')) {
+      this.isNotificationsOpen.set(false);
     }
   }
 }

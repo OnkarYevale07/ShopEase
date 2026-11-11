@@ -106,23 +106,45 @@
           </div>
         </div>
 
-        <!-- Grab Deal Button -->
-        <button
-          type="button"
-          (click)="grabDeal(deal.product, $event)"
-          [class]="
-            addedProducts()[deal.product.id]
-              ? 'w-full flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white shadow-xs transition-all'
-              : 'w-full flex items-center justify-center gap-1.5 rounded-xl bg-purple-600 py-2.5 text-xs font-bold text-white shadow-md shadow-purple-600/30 hover:bg-purple-700 transition-all cursor-pointer'
-          "
-        >
-          @if (addedProducts()[deal.product.id]) {
-            <span>✓ Added to Cart</span>
-          } @else {
+        <!-- Grab Deal / Persisted In Cart State -->
+        @if (store.isInCart(deal.product.id)) {
+          <div
+            class="flex items-center justify-between rounded-xl bg-purple-50 border border-purple-200 px-2 sm:px-2.5 py-1.5 shadow-2xs"
+            (click)="$event.stopPropagation()"
+          >
+            <span class="flex items-center gap-1 text-[11px] sm:text-xs font-bold text-purple-700">
+              <ng-icon name="lucideCheck" class="size-3.5 text-emerald-600" />
+              <span>In Cart ({{ store.getCartQuantity(deal.product.id) }})</span>
+            </span>
+            <div class="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                (click)="store.updateQuantity(deal.product.id, -1); $event.stopPropagation()"
+                class="flex size-6 items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+                aria-label="Decrease quantity"
+              >
+                <ng-icon name="lucideMinus" class="size-3" />
+              </button>
+              <button
+                type="button"
+                (click)="store.updateQuantity(deal.product.id, 1); $event.stopPropagation()"
+                class="flex size-6 items-center justify-center rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors cursor-pointer"
+                aria-label="Increase quantity"
+              >
+                <ng-icon name="lucidePlus" class="size-3" />
+              </button>
+            </div>
+          </div>
+        } @else {
+          <button
+            type="button"
+            (click)="grabDeal(deal.product, $event)"
+            class="w-full flex items-center justify-center gap-1.5 rounded-xl bg-purple-600 py-2.5 text-xs font-bold text-white shadow-md shadow-purple-600/30 hover:bg-purple-700 transition-all cursor-pointer"
+          >
             <ng-icon name="lucideZap" class="size-3.5 text-amber-300" />
             <span>Grab Deal</span>
-          }
-        </button>
+          </button>
+        }
       </div>
     }
   </div>

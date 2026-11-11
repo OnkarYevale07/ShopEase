@@ -18,6 +18,8 @@ import {
   lucideSlidersHorizontal,
   lucideArrowRight,
   lucideCheck,
+  lucidePlus,
+  lucideMinus,
 } from '@ng-icons/lucide';
 import { Product, StoreService } from '../../core/services/store.service';
 
@@ -40,6 +42,8 @@ import { Product, StoreService } from '../../core/services/store.service';
       lucideSlidersHorizontal,
       lucideArrowRight,
       lucideCheck,
+      lucidePlus,
+      lucideMinus,
     }),
   ],
   selector: 'app-categories',

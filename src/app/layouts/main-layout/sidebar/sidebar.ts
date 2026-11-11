@@ -11,13 +11,14 @@ import {
   lucideSettings,
   lucideShoppingBag,
   lucidePanelLeft,
-  lucideSearch,
+  lucideSun,
+  lucideMoon,
 } from '@ng-icons/lucide';
-import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmSidebarImports, HlmSidebarService } from '@spartan-ng/helm/sidebar';
+import { StoreService } from '../../../core/services/store.service';
 
 @Component({
-  imports: [RouterLink, RouterLinkActive, NgIcon, HlmSidebarImports, HlmInputImports],
+  imports: [RouterLink, RouterLinkActive, NgIcon, HlmSidebarImports],
   providers: [
     provideIcons({
       lucideHouse,
@@ -29,7 +30,8 @@ import { HlmSidebarImports, HlmSidebarService } from '@spartan-ng/helm/sidebar';
       lucideSettings,
       lucideShoppingBag,
       lucidePanelLeft,
-      lucideSearch,
+      lucideSun,
+      lucideMoon,
     }),
   ],
   selector: 'app-sidebar',
@@ -38,6 +40,7 @@ import { HlmSidebarImports, HlmSidebarService } from '@spartan-ng/helm/sidebar';
 })
 export class Sidebar {
   protected readonly sidebarService = inject(HlmSidebarService);
+  protected readonly store = inject(StoreService);
 
   // ShopEase brand matching reference image
   protected readonly company = {

@@ -2,6 +2,14 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: 'login',
+    loadComponent: () => import('./features/auth/login/login').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./features/auth/register/register').then((m) => m.RegisterComponent),
+  },
+  {
     path: '',
     loadComponent: () => import('./layouts/main-layout/main-layout').then((m) => m.MainLayout),
     children: [
@@ -36,6 +44,10 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
+        loadComponent: () => import('./features/settings/settings').then((m) => m.SettingsComponent),
+      },
+      {
+        path: 'profile',
         loadComponent: () => import('./features/settings/settings').then((m) => m.SettingsComponent),
       },
       {

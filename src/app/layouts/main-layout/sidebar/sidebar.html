@@ -38,17 +38,6 @@
 
     <div hlmSidebarContent>
       <div hlmSidebarGroup>
-        <!-- Searchbox: Hidden when sidebar is collapsed into icon mode -->
-        <div class="group-data-[collapsible=icon]:hidden mb-2">
-          <div hlmField orientation="horizontal" class="bg-white rounded-lg border-gray-200">
-            <input
-              hlmInput
-              type="search"
-              placeholder="Search..."
-              class="bg-white text-gray-900 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-purple-500"
-            />
-          </div>
-        </div>
         <!-- <div hlmSidebarGroupLabel>Menu</div> -->
         <div hlmSidebarGroupContent>
           <ul hlmSidebarMenu>
@@ -88,11 +77,16 @@
             </a>
           </li>
         }
-        <!-- Convenient collapse toggle in footer: keeps the top exclusively for the logo -->
         <li hlmSidebarMenuItem>
-          <button hlmSidebarMenuButton (click)="toggleSidebar()" tooltip="Toggle Sidebar">
-            <ng-icon name="lucidePanelLeft" />
-            <span>Collapse</span>
+          <button
+            hlmSidebarMenuButton
+            type="button"
+            (click)="store.toggleTheme()"
+            [tooltip]="store.theme() === 'dark' ? 'Light Mode' : 'Dark Mode'"
+            class="w-full text-left cursor-pointer"
+          >
+            <ng-icon [name]="store.theme() === 'dark' ? 'lucideSun' : 'lucideMoon'" />
+            <span>{{ store.theme() === 'dark' ? 'Light Mode' : 'Dark Mode' }}</span>
           </button>
         </li>
       </ul>

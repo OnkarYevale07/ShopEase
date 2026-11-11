@@ -1,36 +1,52 @@
 <div class="w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6">
   <!-- Page Header -->
-  <div class="border-b border-gray-100 pb-5">
-    <div class="flex items-center gap-2 text-xs font-medium text-gray-500 mb-1">
-      <a [routerLink]="['/dashboard']" class="hover:text-purple-600">Home</a>
-      <ng-icon name="lucideChevronRight" class="size-3 text-gray-400" />
-      <span class="text-purple-700 font-semibold">Settings</span>
+  <div class="border-b border-gray-100 dark:border-gray-800 pb-5">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight flex items-center gap-2.5">
+          <span class="flex size-9 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300">
+            <ng-icon name="lucideUser" class="size-5" />
+          </span>
+          My Account & Settings
+        </h1>
+        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+          Manage your personal profile, delivery addresses, security and shopping preferences
+        </p>
+      </div>
+
+      <!-- Quick Stats Card -->
+      <div class="flex items-center gap-3 self-start sm:self-auto bg-purple-50/70 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-900/50 p-2.5 rounded-2xl">
+        <div class="flex items-center gap-2 pr-3 border-r border-purple-200 dark:border-purple-800">
+          <div class="flex size-8 items-center justify-center rounded-xl bg-purple-600 text-white shadow-xs">
+            <ng-icon name="lucideCoins" class="size-4" />
+          </div>
+          <div>
+            <span class="block text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold">Reward Coins</span>
+            <span class="block text-xs font-black text-purple-900 dark:text-purple-300">{{ store.currentUser()?.loyaltyPoints ?? 100 }} Coins</span>
+          </div>
+        </div>
+        <div class="pl-1">
+          <span class="block text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold">Orders Placed</span>
+          <span class="block text-xs font-black text-purple-900 dark:text-purple-300">{{ store.orders().length }} Total</span>
+        </div>
+      </div>
     </div>
-    <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2.5">
-      <span class="flex size-9 items-center justify-center rounded-xl bg-purple-100 text-purple-700">
-        <ng-icon name="lucideSettings" class="size-5" />
-      </span>
-      Account & Settings
-    </h1>
-    <p class="text-xs sm:text-sm text-gray-500 mt-1">
-      Manage your personal profile, addresses, security, and notification preferences
-    </p>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <!-- Side Nav Tabs -->
-    <div class="space-y-1">
+    <div class="space-y-1.5">
       <button
         type="button"
         (click)="setTab('profile')"
         [class]="
           activeTab() === 'profile'
-            ? 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold bg-purple-50 text-purple-700 border-l-4 border-purple-600 shadow-2xs text-left transition-all'
-            : 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs sm:text-sm font-medium text-gray-600 hover:bg-gray-50 text-left transition-all'
+            ? 'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border-l-4 border-purple-600 shadow-2xs text-left transition-all'
+            : 'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-left transition-all'
         "
       >
         <ng-icon name="lucideUser" class="size-4" />
-        Profile Information
+        <span>Personal Details</span>
       </button>
 
       <button
@@ -38,12 +54,12 @@
         (click)="setTab('addresses')"
         [class]="
           activeTab() === 'addresses'
-            ? 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold bg-purple-50 text-purple-700 border-l-4 border-purple-600 shadow-2xs text-left transition-all'
-            : 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs sm:text-sm font-medium text-gray-600 hover:bg-gray-50 text-left transition-all'
+            ? 'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border-l-4 border-purple-600 shadow-2xs text-left transition-all'
+            : 'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-left transition-all'
         "
       >
         <ng-icon name="lucideMapPin" class="size-4" />
-        Saved Addresses
+        <span>Saved Addresses ({{ store.addresses().length }})</span>
       </button>
 
       <button
@@ -51,12 +67,12 @@
         (click)="setTab('notifications')"
         [class]="
           activeTab() === 'notifications'
-            ? 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold bg-purple-50 text-purple-700 border-l-4 border-purple-600 shadow-2xs text-left transition-all'
-            : 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs sm:text-sm font-medium text-gray-600 hover:bg-gray-50 text-left transition-all'
+            ? 'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border-l-4 border-purple-600 shadow-2xs text-left transition-all'
+            : 'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-left transition-all'
         "
       >
         <ng-icon name="lucideBell" class="size-4" />
-        Notifications
+        <span>Notifications</span>
       </button>
 
       <button
@@ -64,219 +80,465 @@
         (click)="setTab('security')"
         [class]="
           activeTab() === 'security'
-            ? 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold bg-purple-50 text-purple-700 border-l-4 border-purple-600 shadow-2xs text-left transition-all'
-            : 'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs sm:text-sm font-medium text-gray-600 hover:bg-gray-50 text-left transition-all'
+            ? 'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border-l-4 border-purple-600 shadow-2xs text-left transition-all'
+            : 'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-left transition-all'
         "
       >
         <ng-icon name="lucideShieldCheck" class="size-4" />
-        Security & Login
+        <span>Security & Password</span>
       </button>
     </div>
 
     <!-- Tab Contents (3 Cols) -->
     <div class="md:col-span-3">
-      <!-- Profile Tab -->
+      <!-- 1. Profile / Personal Details Tab -->
       @if (activeTab() === 'profile') {
-        <div class="rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-7 shadow-2xs space-y-6">
-          <div class="flex items-center gap-4 pb-4 border-b border-gray-100">
-            <div class="size-16 rounded-2xl bg-linear-to-tr from-purple-600 to-indigo-500 text-white font-extrabold text-2xl flex items-center justify-center shadow-md">
-              AS
+        <div class="rounded-3xl border border-gray-200/80 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 sm:p-7 shadow-xs space-y-6">
+          <div class="flex items-center gap-4 pb-5 border-b border-gray-100 dark:border-gray-800">
+            <div class="size-16 rounded-2xl bg-linear-to-tr from-purple-600 to-indigo-600 text-white font-black text-2xl flex items-center justify-center shadow-md shadow-purple-600/30">
+              {{ profileForm.fullName.charAt(0) || 'U' }}
             </div>
             <div>
-              <h3 class="font-bold text-gray-900 text-lg">{{ profile.fullName }}</h3>
-              <p class="text-xs text-gray-500">{{ profile.email }}</p>
-              <span class="inline-block mt-1 text-[11px] font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md">
-                Verified Shopper
-              </span>
+              <h3 class="font-extrabold text-gray-900 dark:text-white text-lg sm:text-xl">{{ profileForm.fullName }}</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ profileForm.email }}</p>
+              <div class="flex items-center gap-2 mt-1.5">
+                <span class="text-[11px] font-bold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/50 px-2.5 py-0.5 rounded-full">
+                  Verified Shopper
+                </span>
+                <span class="text-[11px] text-gray-400 dark:text-gray-500">Member since {{ store.currentUser()?.memberSince ?? '2024' }}</span>
+              </div>
             </div>
           </div>
 
           <form (submit)="saveProfile(); $event.preventDefault()" class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1">Full Name</label>
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">Full Name</label>
                 <input
                   type="text"
-                  [(ngModel)]="profile.fullName"
+                  [(ngModel)]="profileForm.fullName"
                   name="fullName"
-                  class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-500/20"
                 />
               </div>
 
               <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1">Email Address</label>
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">Email Address</label>
                 <input
                   type="email"
-                  [(ngModel)]="profile.email"
+                  [(ngModel)]="profileForm.email"
                   name="email"
-                  class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-500/20"
                 />
               </div>
 
               <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1">Phone Number</label>
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">Phone Number</label>
                 <input
                   type="tel"
-                  [(ngModel)]="profile.phone"
+                  [(ngModel)]="profileForm.phone"
                   name="phone"
-                  class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-500/20"
                 />
               </div>
 
               <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1">City / Region</label>
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">Gender</label>
+                <select
+                  [(ngModel)]="profileForm.gender"
+                  name="gender"
+                  class="w-full rounded-xl border border-gray-200 dark:border-gray-700 px-3.5 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-500/20 bg-white dark:bg-gray-800"
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">Birth Date</label>
                 <input
-                  type="text"
-                  [(ngModel)]="profile.city"
-                  name="city"
-                  class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  type="date"
+                  [(ngModel)]="profileForm.birthDate"
+                  name="birthDate"
+                  class="w-full rounded-xl border border-gray-200 dark:border-gray-700 px-3.5 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-500/20 bg-white dark:bg-gray-800"
                 />
               </div>
             </div>
 
-            <div class="pt-3 border-t border-gray-100 flex justify-end">
+            <div class="pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-end">
               <button
                 type="submit"
-                class="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-sm hover:bg-purple-700 transition-colors"
+                class="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-purple-600/30 hover:bg-purple-700 transition-colors cursor-pointer"
               >
                 <ng-icon name="lucideSave" class="size-4" />
-                Save Changes
+                <span>Save Profile Changes</span>
               </button>
             </div>
           </form>
         </div>
       }
 
-      <!-- Addresses Tab -->
+      <!-- 2. Delivery Addresses Tab -->
       @if (activeTab() === 'addresses') {
-        <div class="rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-7 shadow-2xs space-y-6">
-          <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+        <div class="rounded-3xl border border-gray-200/80 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 sm:p-7 shadow-xs space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-gray-100 dark:border-gray-800">
             <div>
-              <h3 class="font-bold text-gray-900 text-base">Delivery Addresses</h3>
-              <p class="text-xs text-gray-500">Choose your default delivery destination</p>
+              <h3 class="font-bold text-gray-900 dark:text-white text-lg">Saved Delivery Addresses</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Add or manage destination addresses for 1-click checkout</p>
             </div>
+
+            <button
+              type="button"
+              (click)="openAddAddressModal()"
+              class="inline-flex items-center gap-1.5 rounded-xl bg-purple-600 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-purple-700 transition-colors cursor-pointer self-start sm:self-auto"
+            >
+              <ng-icon name="lucidePlus" class="size-4" />
+              <span>Add New Address</span>
+            </button>
           </div>
 
-          <div class="grid grid-cols-1 gap-4">
-            @for (addr of addresses; track addr.id) {
+          <!-- Address Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @for (addr of store.addresses(); track addr.id) {
               <div
-                class="p-4 rounded-xl border transition-all"
-                [ngClass]="addr.isDefault ? 'border-purple-300 bg-purple-50/20 shadow-xs' : 'border-gray-200 bg-white'"
+                class="p-4 rounded-2xl border transition-all relative flex flex-col justify-between"
+                [ngClass]="addr.isDefault ? 'border-purple-300 dark:border-purple-800 bg-purple-50/20 dark:bg-purple-950/20 shadow-xs' : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-850'"
               >
-                <div class="flex items-center justify-between mb-2">
-                  <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-gray-100 text-gray-800">
-                      {{ addr.tag }}
-                    </span>
-                    @if (addr.isDefault) {
-                      <span class="px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-purple-100 text-purple-700">
-                        Default
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+                        @if (addr.tag === 'Home') {
+                          <ng-icon name="lucideHome" class="size-3 text-purple-600 dark:text-purple-400" />
+                        } @else {
+                          <ng-icon name="lucideBriefcase" class="size-3 text-purple-600 dark:text-purple-400" />
+                        }
+                        {{ addr.tag }}
                       </span>
-                    }
+                      @if (addr.isDefault) {
+                        <span class="px-2 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-purple-100 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                          Default
+                        </span>
+                      }
+                    </div>
+
+                    <button
+                      type="button"
+                      (click)="deleteAddress(addr.id, $event)"
+                      class="text-gray-400 hover:text-rose-600 p-1 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                      title="Delete Address"
+                    >
+                      <ng-icon name="lucideTrash2" class="size-4" />
+                    </button>
                   </div>
+
+                  <p class="font-bold text-gray-900 dark:text-white text-sm sm:text-base">{{ addr.name }}</p>
+                  <p class="text-xs text-gray-600 dark:text-gray-300 mt-1 leading-relaxed">
+                    {{ addr.street }}@if (addr.landmark) {, {{ addr.landmark }}}
+                  </p>
+                  <p class="text-xs text-gray-600 dark:text-gray-300 font-medium">
+                    {{ addr.city }}, {{ addr.state }} - <span class="font-bold">{{ addr.pincode }}</span>
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">Phone: <span class="text-gray-800 dark:text-gray-200 font-semibold">{{ addr.phone }}</span></p>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
                   @if (!addr.isDefault) {
                     <button
                       type="button"
                       (click)="setDefaultAddress(addr.id)"
-                      class="text-xs font-semibold text-purple-600 hover:text-purple-700"
+                      class="text-xs font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 cursor-pointer"
                     >
-                      Make Default
+                      Set as Default
                     </button>
+                  } @else {
+                    <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                      <ng-icon name="lucideCheck" class="size-3.5" />
+                      Default Destination
+                    </span>
                   }
                 </div>
-
-                <p class="font-bold text-gray-900 text-sm">{{ addr.name }}</p>
-                <p class="text-xs text-gray-600 mt-0.5">{{ addr.street }}, {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}</p>
-                <p class="text-xs text-gray-500 mt-1">Phone: {{ addr.phone }}</p>
               </div>
             }
           </div>
         </div>
       }
 
-      <!-- Notifications Tab -->
+      <!-- 3. Notifications Tab -->
       @if (activeTab() === 'notifications') {
-        <div class="rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-7 shadow-2xs space-y-5">
-          <div class="pb-3 border-b border-gray-100">
-            <h3 class="font-bold text-gray-900 text-base">Notification Preferences</h3>
-            <p class="text-xs text-gray-500">Configure how and when you want ShopEase to communicate with you</p>
+        <div class="rounded-3xl border border-gray-200/80 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 sm:p-7 shadow-xs space-y-5">
+          <div class="pb-3 border-b border-gray-100 dark:border-gray-800">
+            <h3 class="font-bold text-gray-900 dark:text-white text-lg">Notification Preferences</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Configure how and when you want ShopEase to communicate with you</p>
           </div>
 
           <div class="space-y-4">
-            <label class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:bg-gray-50 cursor-pointer">
+            <label class="flex items-center justify-between p-3.5 rounded-2xl border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
               <div>
-                <span class="block text-xs sm:text-sm font-semibold text-gray-900">Order Status Updates</span>
-                <span class="block text-xs text-gray-500">Receive live push and SMS notifications on shipping and delivery status</span>
+                <span class="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">Order Status Updates</span>
+                <span class="block text-xs text-gray-500 dark:text-gray-400">Receive live push and SMS notifications on shipping and delivery status</span>
               </div>
               <input type="checkbox" [(ngModel)]="notifications.orderUpdates" class="size-5 accent-purple-600 rounded" />
             </label>
 
-            <label class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:bg-gray-50 cursor-pointer">
+            <label class="flex items-center justify-between p-3.5 rounded-2xl border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
               <div>
-                <span class="block text-xs sm:text-sm font-semibold text-gray-900">Flash Deals & Promotional Offers</span>
-                <span class="block text-xs text-gray-500">Get early notifications about mega sale days and lightning discounts</span>
+                <span class="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">Flash Deals & Promotional Offers</span>
+                <span class="block text-xs text-gray-500 dark:text-gray-400">Get early notifications about mega sale days and lightning discounts</span>
               </div>
               <input type="checkbox" [(ngModel)]="notifications.promotions" class="size-5 accent-purple-600 rounded" />
             </label>
 
-            <label class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:bg-gray-50 cursor-pointer">
+            <label class="flex items-center justify-between p-3.5 rounded-2xl border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
               <div>
-                <span class="block text-xs sm:text-sm font-semibold text-gray-900">ShopEase Weekly Newsletter</span>
-                <span class="block text-xs text-gray-500">Curated weekly highlights on trending styles and new tech gadgets</span>
+                <span class="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">ShopEase Weekly Newsletter</span>
+                <span class="block text-xs text-gray-500 dark:text-gray-400">Curated weekly highlights on trending styles and new tech gadgets</span>
               </div>
               <input type="checkbox" [(ngModel)]="notifications.newsletter" class="size-5 accent-purple-600 rounded" />
             </label>
           </div>
 
-          <div class="pt-3 border-t border-gray-100 flex justify-end">
+          <div class="pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-end">
             <button
               type="button"
               (click)="saveNotifications()"
               class="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-sm hover:bg-purple-700 transition-colors"
             >
               <ng-icon name="lucideSave" class="size-4" />
-              Save Preferences
+              <span>Save Preferences</span>
             </button>
           </div>
         </div>
       }
 
-      <!-- Security Tab -->
+      <!-- 4. Security & Password Tab -->
       @if (activeTab() === 'security') {
-        <div class="rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-7 shadow-2xs space-y-5">
-          <div class="pb-3 border-b border-gray-100">
-            <h3 class="font-bold text-gray-900 text-base">Security & Authentication</h3>
-            <p class="text-xs text-gray-500">Manage password and security protections for your account</p>
+        <div class="rounded-3xl border border-gray-200/80 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 sm:p-7 shadow-xs space-y-6">
+          <div class="pb-3 border-b border-gray-100 dark:border-gray-800">
+            <h3 class="font-bold text-gray-900 dark:text-white text-lg">Security & Authentication</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Manage password and security protections for your account</p>
           </div>
 
           <div class="space-y-4">
-            <div class="flex items-center justify-between p-3.5 rounded-xl border border-gray-100">
+            <div class="flex items-center justify-between p-3.5 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50">
               <div>
-                <span class="block text-xs sm:text-sm font-semibold text-gray-900">Two-Factor Authentication (2FA)</span>
-                <span class="block text-xs text-gray-500">Protect account with OTP confirmation on every new login</span>
+                <span class="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">Two-Factor Authentication (2FA)</span>
+                <span class="block text-xs text-gray-500 dark:text-gray-400">Protect account with OTP confirmation on every new login</span>
               </div>
-              <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                 Active
               </span>
             </div>
 
-            <div class="flex items-center justify-between p-3.5 rounded-xl border border-gray-100">
-              <div>
-                <span class="block text-xs sm:text-sm font-semibold text-gray-900">Password</span>
-                <span class="block text-xs text-gray-500">Last changed 2 months ago</span>
+            <!-- Change Password Form -->
+            <form (submit)="changePassword(); $event.preventDefault()" class="space-y-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+              <h4 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Change Password</h4>
+              <div class="space-y-3 max-w-md">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
+                  <input
+                    type="password"
+                    [(ngModel)]="passwordForm.current"
+                    name="current"
+                    placeholder="••••••••"
+                    class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3.5 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-500/20"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">New Password</label>
+                  <input
+                    type="password"
+                    [(ngModel)]="passwordForm.newPass"
+                    name="newPass"
+                    placeholder="Minimum 6 characters"
+                    class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3.5 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-500/20"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Confirm New Password</label>
+                  <input
+                    type="password"
+                    [(ngModel)]="passwordForm.confirmPass"
+                    name="confirmPass"
+                    placeholder="Re-enter new password"
+                    class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3.5 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-500/20"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="rounded-xl bg-purple-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-sm hover:bg-purple-700 transition-colors cursor-pointer"
+                >
+                  Update Password
+                </button>
               </div>
-              <button
-                type="button"
-                (click)="store.showToast('Password change email link sent to your registered address.', 'info')"
-                class="px-3.5 py-1.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-gray-50"
-              >
-                Change Password
-              </button>
-            </div>
+            </form>
           </div>
         </div>
       }
     </div>
   </div>
-</div>
 
+  <!-- ADD NEW ADDRESS MODAL DIALOG -->
+  @if (isAddAddressOpen()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div class="fixed inset-0 bg-black/50 backdrop-blur-xs" (click)="closeAddAddressModal()"></div>
+
+      <div class="relative z-50 w-full max-w-lg rounded-3xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 sm:p-8 shadow-2xl animate-in zoom-in-95 duration-200 space-y-4">
+        <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
+          <div class="flex items-center gap-2">
+            <div class="flex size-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300">
+              <ng-icon name="lucideMapPin" class="size-4" />
+            </div>
+            <h3 class="text-lg font-black text-gray-900 dark:text-white">Add Delivery Address</h3>
+          </div>
+          <button
+            type="button"
+            (click)="closeAddAddressModal()"
+            class="size-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200"
+          >
+            <ng-icon name="lucideX" class="size-5" />
+          </button>
+        </div>
+
+        <form (submit)="saveNewAddress(); $event.preventDefault()" class="space-y-3.5">
+          <!-- Tag selector: Home vs Work vs Other -->
+          <div>
+            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">Address Type</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                (click)="newAddress.tag = 'Home'"
+                [class]="
+                  newAddress.tag === 'Home'
+                    ? 'flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-xs'
+                    : 'flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                "
+              >
+                <ng-icon name="lucideHome" class="size-3.5" />
+                <span>Home</span>
+              </button>
+              <button
+                type="button"
+                (click)="newAddress.tag = 'Work'"
+                [class]="
+                  newAddress.tag === 'Work'
+                    ? 'flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-xs'
+                    : 'flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                "
+              >
+                <ng-icon name="lucideBriefcase" class="size-3.5" />
+                <span>Work</span>
+              </button>
+              <button
+                type="button"
+                (click)="newAddress.tag = 'Other'"
+                [class]="
+                  newAddress.tag === 'Other'
+                    ? 'flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-xs'
+                    : 'flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                "
+              >
+                <ng-icon name="lucideMapPin" class="size-3.5" />
+                <span>Other</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+              <input
+                type="text"
+                [(ngModel)]="newAddress.name"
+                name="addrName"
+                required
+                placeholder="Recipient name"
+                class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-xs sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+              <input
+                type="tel"
+                [(ngModel)]="newAddress.phone"
+                name="addrPhone"
+                required
+                placeholder="+91 98765 43210"
+                class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-xs sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Flat, House no., Building, Street</label>
+            <input
+              type="text"
+              [(ngModel)]="newAddress.street"
+              name="addrStreet"
+              required
+              placeholder="e.g. 402, Horizon Heights, Linking Road"
+              class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-xs sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Landmark</label>
+              <input
+                type="text"
+                [(ngModel)]="newAddress.landmark"
+                name="addrLandmark"
+                placeholder="e.g. Near Metro"
+                class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-xs sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">City</label>
+              <input
+                type="text"
+                [(ngModel)]="newAddress.city"
+                name="addrCity"
+                required
+                class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-xs sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">PIN Code</label>
+              <input
+                type="text"
+                [(ngModel)]="newAddress.pincode"
+                name="addrPincode"
+                required
+                placeholder="6 digits"
+                class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-xs sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:border-purple-600"
+              />
+            </div>
+          </div>
+
+          <label class="flex items-center gap-2 pt-1 cursor-pointer">
+            <input type="checkbox" [(ngModel)]="newAddress.isDefault" name="isDefault" class="size-4 rounded accent-purple-600" />
+            <span class="text-xs text-gray-700 dark:text-gray-300 font-medium">Make this my default shipping address</span>
+          </label>
+
+          <div class="pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              (click)="closeAddAddressModal()"
+              class="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-purple-600 text-xs font-bold text-white shadow-sm hover:bg-purple-700 cursor-pointer"
+            >
+              Save Address
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

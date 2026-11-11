@@ -10,6 +10,9 @@ import {
   lucideStar,
   lucideSparkles,
   lucideArrowRight,
+  lucideCheck,
+  lucidePlus,
+  lucideMinus,
 } from '@ng-icons/lucide';
 import { StoreService, Product } from '../../core/services/store.service';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -27,6 +30,9 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
       lucideStar,
       lucideSparkles,
       lucideArrowRight,
+      lucideCheck,
+      lucidePlus,
+      lucideMinus,
     }),
   ],
   templateUrl: './wishlist.html',

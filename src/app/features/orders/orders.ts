@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
@@ -13,6 +14,11 @@ import {
   lucideFileText,
   lucideChevronRight,
   lucideAlertCircle,
+  lucideXCircle,
+  lucideAlertTriangle,
+  lucideBan,
+  lucideX,
+  lucideChevronDown,
 } from '@ng-icons/lucide';
 import { StoreService, Order, Product } from '../../core/services/store.service';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -20,7 +26,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgIcon, HlmButtonImports],
+  imports: [CommonModule, FormsModule, RouterLink, NgIcon, HlmButtonImports],
   providers: [
     provideIcons({
       lucidePackage,
@@ -33,6 +39,11 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
       lucideFileText,
       lucideChevronRight,
       lucideAlertCircle,
+      lucideXCircle,
+      lucideAlertTriangle,
+      lucideBan,
+      lucideX,
+      lucideChevronDown,
     }),
   ],
   templateUrl: './orders.html',
@@ -41,14 +52,31 @@ export class OrdersComponent {
   protected readonly store = inject(StoreService);
 
   // Status Filter Signal
-  protected readonly selectedFilter = signal<'All' | 'Processing' | 'Shipped' | 'Out for Delivery' | 'Delivered'>('All');
+  protected readonly selectedFilter = signal<
+    'All' | 'Processing' | 'Shipped' | 'Out for Delivery' | 'Delivered' | 'Cancelled'
+  >('All');
 
-  protected readonly filterTabs: Array<'All' | 'Processing' | 'Shipped' | 'Out for Delivery' | 'Delivered'> = [
+  protected readonly filterTabs: Array<
+    'All' | 'Processing' | 'Shipped' | 'Out for Delivery' | 'Delivered' | 'Cancelled'
+  > = [
     'All',
     'Processing',
     'Shipped',
     'Out for Delivery',
     'Delivered',
+    'Cancelled',
+  ];
+
+  // Cancellation Modal State
+  protected readonly cancellingOrder = signal<Order | null>(null);
+  protected readonly selectedCancelReason = signal<string>('Found a better price elsewhere');
+  protected readonly cancelReasons = [
+    'Found a better price elsewhere',
+    'Changed my mind / Not needed anymore',
+    'Order placed by mistake',
+    'Estimated delivery time is too long',
+    'Incorrect shipping address or payment method',
+    'Other reason',
   ];
 
   // Filtered orders list
@@ -59,7 +87,9 @@ export class OrdersComponent {
     return orders.filter((o) => o.status === filter);
   });
 
-  protected setFilter(filter: 'All' | 'Processing' | 'Shipped' | 'Out for Delivery' | 'Delivered'): void {
+  protected setFilter(
+    filter: 'All' | 'Processing' | 'Shipped' | 'Out for Delivery' | 'Delivered' | 'Cancelled'
+  ): void {
     this.selectedFilter.set(filter);
   }
 
@@ -77,6 +107,8 @@ export class OrdersComponent {
         return 'bg-amber-50 text-amber-700 border-amber-200';
       case 'Shipped':
         return 'bg-blue-50 text-blue-700 border-blue-200';
+      case 'Cancelled':
+        return 'bg-rose-50 text-rose-700 border-rose-200';
       case 'Processing':
       default:
         return 'bg-purple-50 text-purple-700 border-purple-200';
@@ -97,6 +129,32 @@ export class OrdersComponent {
       default:
         return 0;
     }
+  }
+
+  // Cancellation helpers
+  protected canCancel(order: Order): boolean {
+    return this.store.canCancelOrder(order);
+  }
+
+  protected getCancelMinutesLeft(order: Order): number {
+    return this.store.getRemainingCancelMinutes(order);
+  }
+
+  protected openCancelModal(order: Order, event: Event): void {
+    event.stopPropagation();
+    this.cancellingOrder.set(order);
+  }
+
+  protected closeCancelModal(): void {
+    this.cancellingOrder.set(null);
+  }
+
+  protected confirmCancel(): void {
+    const order = this.cancellingOrder();
+    if (order) {
+      this.store.cancelOrder(order.id, this.selectedCancelReason());
+    }
+    this.closeCancelModal();
   }
 
   // Buy Again / Reorder

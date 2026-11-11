@@ -29,6 +29,10 @@ import {
   lucidePlus,
   lucideMinus,
   lucideX,
+  lucideInstagram,
+  lucideYoutube,
+  lucideFacebook,
+  lucideTwitter,
 } from '@ng-icons/lucide';
 import { Product, StoreService } from '../../core/services/store.service';
 
@@ -70,6 +74,10 @@ export interface CategoryItem {
       lucidePlus,
       lucideMinus,
       lucideX,
+      lucideInstagram,
+      lucideYoutube,
+      lucideFacebook,
+      lucideTwitter,
     }),
   ],
   selector: 'app-dashboard',

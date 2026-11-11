@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
@@ -21,14 +22,18 @@ import {
   lucideSparkles,
   lucideCheck,
   lucideShoppingBag,
+  lucideThumbsUp,
+  lucideMessageSquare,
+  lucideSend,
+  lucideX,
 } from '@ng-icons/lucide';
-import { Product, StoreService } from '../../core/services/store.service';
+import { Product, ProductReview, StoreService } from '../../core/services/store.service';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgIcon, HlmButtonImports],
+  imports: [CommonModule, FormsModule, RouterLink, NgIcon, HlmButtonImports],
   providers: [
     provideIcons({
       lucideArrowLeft,
@@ -47,6 +52,10 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
       lucideSparkles,
       lucideCheck,
       lucideShoppingBag,
+      lucideThumbsUp,
+      lucideMessageSquare,
+      lucideSend,
+      lucideX,
     }),
   ],
   templateUrl: './product-detail.html',
@@ -68,13 +77,38 @@ export class ProductDetailComponent {
     return this.store.getProductById(id);
   });
 
-  // Selected quantity
+  // Persisted In-Cart State Check
+  protected readonly isInCart = computed<boolean>(() => {
+    const p = this.product();
+    return p ? this.store.isInCart(p.id) : false;
+  });
+
+  protected readonly cartQuantity = computed<number>(() => {
+    const p = this.product();
+    return p ? this.store.getCartQuantity(p.id) : 0;
+  });
+
+  // Selected quantity for adding
   protected readonly quantity = signal<number>(1);
 
-  // Added animation state
+  // Added feedback state
   protected readonly isJustAdded = signal<boolean>(false);
 
-  // Related products from same category or trending
+  // Reviews State
+  protected readonly productReviews = computed<ProductReview[]>(() => {
+    const p = this.product();
+    if (!p) return [];
+    return this.store.getProductReviews(p.id);
+  });
+
+  // Write Review Drawer / Form Toggle
+  protected readonly isWriteReviewOpen = signal<boolean>(false);
+  protected newRating = signal<number>(0);
+  protected newTitle = '';
+  protected newAuthor = this.store.currentUser()?.fullName ?? '';
+  protected newComment = '';
+
+  // Related products
   protected readonly relatedProducts = computed<Product[]>(() => {
     const current = this.product();
     if (!current) return this.store.allProducts().slice(0, 4);
@@ -87,9 +121,7 @@ export class ProductDetailComponent {
       return sameCategory.slice(0, 4);
     }
 
-    const fallback = this.store
-      .allProducts()
-      .filter((p) => p.id !== current.id);
+    const fallback = this.store.allProducts().filter((p) => p.id !== current.id);
     return fallback.slice(0, 4);
   });
 
@@ -113,6 +145,12 @@ export class ProductDetailComponent {
     this.quantity.update((q) => Math.max(q - 1, 1));
   }
 
+  protected updateInCartQty(delta: number): void {
+    const p = this.product();
+    if (!p) return;
+    this.store.updateQuantity(p.id, delta);
+  }
+
   protected addToCart(): void {
     const p = this.product();
     if (!p) return;
@@ -126,7 +164,9 @@ export class ProductDetailComponent {
     const p = this.product();
     if (!p) return;
 
-    this.store.addToCart(p, this.quantity());
+    if (!this.isInCart()) {
+      this.store.addToCart(p, this.quantity());
+    }
     this.store.openCart();
   }
 
@@ -134,5 +174,53 @@ export class ProductDetailComponent {
     navigator.clipboard?.writeText(window.location.href);
     this.store.showToast('Product link copied to clipboard!', 'info');
   }
-}
 
+  // Reviews methods
+  protected toggleWriteReview(): void {
+    const opening = !this.isWriteReviewOpen();
+    this.isWriteReviewOpen.set(opening);
+    if (opening) {
+      this.newRating.set(0);
+      this.newTitle = '';
+      this.newComment = '';
+      this.newAuthor = this.store.currentUser()?.fullName ?? '';
+    }
+  }
+
+  protected setRating(stars: number): void {
+    this.newRating.set(stars);
+  }
+
+  protected submitReview(): void {
+    const p = this.product();
+    if (!p) return;
+
+    if (this.newRating() === 0) {
+      this.store.showToast('Please select a star rating by tapping on the stars.', 'error');
+      return;
+    }
+
+    if (!this.newTitle.trim() || !this.newComment.trim()) {
+      this.store.showToast('Please provide both a review headline and comment.', 'error');
+      return;
+    }
+
+    this.store.addReview({
+      productId: p.id,
+      author: this.newAuthor.trim() || 'Verified Shopper',
+      rating: this.newRating(),
+      title: this.newTitle.trim(),
+      comment: this.newComment.trim(),
+      verifiedPurchase: true,
+    });
+
+    this.newRating.set(0);
+    this.newTitle = '';
+    this.newComment = '';
+    this.isWriteReviewOpen.set(false);
+  }
+
+  protected likeReview(reviewId: string): void {
+    this.store.likeReview(reviewId);
+  }
+}

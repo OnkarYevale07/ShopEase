@@ -4,6 +4,8 @@
 @import '@spartan-ng/brain/hlm-tailwind-preset.css';
 @source "../libs";
 
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   color-scheme: light;
 
@@ -44,6 +46,32 @@
   --input: oklch(0.91 0.015 292.717);
   --ring: oklch(60.6% 0.25 292.717);
 
+  /* Typography Variables */
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+
+  /* Category Dynamic Palette (Light Mode) */
+  --cat-fashion-bg: rgba(243, 232, 255, 0.95);
+  --cat-fashion-text: #7e22ce;
+  --cat-electronics-bg: rgba(219, 234, 254, 0.95);
+  --cat-electronics-text: #1d4ed8;
+  --cat-home-bg: rgba(209, 250, 229, 0.95);
+  --cat-home-text: #047857;
+  --cat-beauty-bg: rgba(252, 231, 243, 0.95);
+  --cat-beauty-text: #be185d;
+  --cat-accessories-bg: rgba(254, 243, 199, 0.95);
+  --cat-accessories-text: #b45309;
+  --cat-sports-bg: rgba(237, 233, 254, 0.95);
+  --cat-sports-text: #6d28d9;
+  --cat-toys-bg: rgba(255, 237, 213, 0.95);
+  --cat-toys-text: #c2410c;
+  --cat-books-bg: rgba(224, 231, 255, 0.95);
+  --cat-books-text: #4338ca;
+  --cat-automotive-bg: rgba(224, 242, 254, 0.95);
+  --cat-automotive-text: #0369a1;
+
   /* Charts */
   --chart-1: oklch(60.6% 0.25 292.717);
   --chart-2: oklch(0.65 0.18 250);
@@ -63,4 +91,288 @@
 
   /* Radius */
   --radius: 0.625rem;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Base */
+  --background: oklch(0.14 0.012 292);
+  --foreground: oklch(0.985 0 0);
+
+  /* Card */
+  --card: oklch(0.18 0.015 292);
+  --card-foreground: oklch(0.985 0 0);
+
+  /* Popover */
+  --popover: oklch(0.18 0.015 292);
+  --popover-foreground: oklch(0.985 0 0);
+
+  /* Primary */
+  --primary: oklch(62% 0.24 292.717);
+  --primary-foreground: oklch(0.985 0 0);
+
+  /* Secondary */
+  --secondary: oklch(0.24 0.02 292);
+  --secondary-foreground: oklch(0.985 0 0);
+
+  /* Muted */
+  --muted: oklch(0.22 0.02 292);
+  --muted-foreground: oklch(0.68 0.02 292);
+
+  /* Accent */
+  --accent: oklch(0.26 0.03 292);
+  --accent-foreground: oklch(0.985 0 0);
+
+  /* Destructive */
+  --destructive: oklch(0.55 0.22 27.3);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  /* Border & Input */
+  --border: oklch(0.26 0.018 292);
+  --input: oklch(0.26 0.018 292);
+  --ring: oklch(62% 0.24 292.717);
+
+  /* Typography Variables (Dark Mode - Bright & High Contrast) */
+  --text-primary: #f8fafc;
+  --text-secondary: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+
+  /* Category Dynamic Palette (Dark Mode - Vibrant Luminous Tints & Bright Icons) */
+  --cat-fashion-bg: rgba(192, 132, 252, 0.22);
+  --cat-fashion-text: #e9d5ff;
+  --cat-electronics-bg: rgba(96, 165, 250, 0.22);
+  --cat-electronics-text: #bfdbfe;
+  --cat-home-bg: rgba(52, 211, 153, 0.22);
+  --cat-home-text: #a7f3d0;
+  --cat-beauty-bg: rgba(244, 114, 182, 0.22);
+  --cat-beauty-text: #fbcfe8;
+  --cat-accessories-bg: rgba(251, 191, 36, 0.22);
+  --cat-accessories-text: #fef08a;
+  --cat-sports-bg: rgba(167, 139, 250, 0.22);
+  --cat-sports-text: #ddd6fe;
+  --cat-toys-bg: rgba(251, 146, 60, 0.22);
+  --cat-toys-text: #fed7aa;
+  --cat-books-bg: rgba(129, 140, 248, 0.22);
+  --cat-books-text: #c7d2fe;
+  --cat-automotive-bg: rgba(56, 189, 248, 0.22);
+  --cat-automotive-text: #bae6fd;
+
+  /* Charts */
+  --chart-1: oklch(62% 0.24 292.717);
+  --chart-2: oklch(0.70 0.16 250);
+  --chart-3: oklch(0.72 0.15 180);
+  --chart-4: oklch(0.75 0.17 90);
+  --chart-5: oklch(0.70 0.18 30);
+
+  /* Sidebar - Dark Mode (Rich Dark Purple/Slate) */
+  --sidebar: oklch(0.16 0.018 292);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(62% 0.24 292.717);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.22 0.025 292);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.24 0.018 292);
+  --sidebar-ring: oklch(62% 0.24 292.717);
+}
+
+/* ======================================================== */
+/* GLOBAL THEME APPLIED VIA CSS VARIABLES                   */
+/* ======================================================== */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dark main {
+  background-color: var(--background);
+}
+
+/* Category Icon Colors in Dark Mode */
+.dark .text-purple-700,
+.dark .text-purple-800,
+.dark .text-purple-900 {
+  color: var(--cat-fashion-text) !important;
+}
+
+.dark .text-blue-700,
+.dark .text-blue-800,
+.dark .text-blue-900 {
+  color: var(--cat-electronics-text) !important;
+}
+
+.dark .text-emerald-700,
+.dark .text-emerald-800,
+.dark .text-emerald-900 {
+  color: var(--cat-home-text) !important;
+}
+
+.dark .text-pink-700,
+.dark .text-pink-800,
+.dark .text-pink-900 {
+  color: var(--cat-beauty-text) !important;
+}
+
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-amber-900 {
+  color: var(--cat-accessories-text) !important;
+}
+
+.dark .text-violet-700,
+.dark .text-violet-800,
+.dark .text-violet-900 {
+  color: var(--cat-sports-text) !important;
+}
+
+.dark .text-orange-700,
+.dark .text-orange-800,
+.dark .text-orange-900 {
+  color: var(--cat-toys-text) !important;
+}
+
+.dark .text-indigo-700,
+.dark .text-indigo-800,
+.dark .text-indigo-900 {
+  color: var(--cat-books-text) !important;
+}
+
+.dark .text-sky-700,
+.dark .text-sky-800,
+.dark .text-sky-900 {
+  color: var(--cat-automotive-text) !important;
+}
+
+/* Category Backgrounds in Dark Mode */
+.dark .bg-purple-100\/80,
+.dark .bg-purple-100 {
+  background-color: var(--cat-fashion-bg) !important;
+}
+
+.dark .bg-blue-100\/80,
+.dark .bg-blue-100 {
+  background-color: var(--cat-electronics-bg) !important;
+}
+
+.dark .bg-emerald-100\/80,
+.dark .bg-emerald-100 {
+  background-color: var(--cat-home-bg) !important;
+}
+
+.dark .bg-pink-100\/80,
+.dark .bg-pink-100 {
+  background-color: var(--cat-beauty-bg) !important;
+}
+
+.dark .bg-amber-100\/80,
+.dark .bg-amber-100 {
+  background-color: var(--cat-accessories-bg) !important;
+}
+
+.dark .bg-violet-100\/80,
+.dark .bg-violet-100 {
+  background-color: var(--cat-sports-bg) !important;
+}
+
+.dark .bg-orange-100\/80,
+.dark .bg-orange-100 {
+  background-color: var(--cat-toys-bg) !important;
+}
+
+.dark .bg-indigo-100\/80,
+.dark .bg-indigo-100 {
+  background-color: var(--cat-books-bg) !important;
+}
+
+.dark .bg-sky-100\/80,
+.dark .bg-sky-100 {
+  background-color: var(--cat-automotive-bg) !important;
+}
+
+/* Selected Category Pill Tint in Dark Mode */
+.dark .bg-purple-50\/80,
+.dark .bg-purple-50 {
+  background-color: rgba(168, 85, 247, 0.22) !important;
+}
+
+/* Typography Visibility Overrides in Dark Mode */
+.dark .text-gray-900,
+.dark .text-gray-800 {
+  color: var(--text-primary) !important;
+}
+
+.dark .text-gray-700 {
+  color: var(--text-secondary) !important;
+}
+
+.dark .text-gray-600,
+.dark .text-gray-500 {
+  color: var(--text-muted) !important;
+}
+
+.dark .text-gray-400 {
+  color: var(--text-subtle) !important;
+}
+
+/* Dark Mode Surfaces and Cards */
+.dark .bg-white {
+  background-color: var(--card) !important;
+}
+
+.dark .bg-white\/85,
+.dark .bg-white\/90,
+.dark .bg-white\/95 {
+  background-color: var(--card) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-50\/50,
+.dark .bg-gray-50\/60,
+.dark .bg-gray-50\/70,
+.dark .bg-gray-50\/80,
+.dark .bg-gray-50\/90 {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-200\/80,
+.dark .border-gray-300 {
+  border-color: var(--border) !important;
+}
+
+.dark .hover\:bg-gray-50:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.dark .hover\:bg-purple-50:hover {
+  background-color: rgba(168, 85, 247, 0.18) !important;
+}
+
+/* Ensure all SVG icon paths inherit and render brightly in dark mode */
+.dark ng-icon svg {
+  color: inherit;
+}
+
+/* Native Select & Option Dark Mode Styling */
+.dark select {
+  color-scheme: dark;
+  background-color: var(--card) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+
+.dark select option {
+  background-color: oklch(0.18 0.015 292);
+  color: #f8fafc;
 }

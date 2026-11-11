@@ -10,6 +10,9 @@ import {
   lucideArrowRight,
   lucideClock,
   lucideSparkles,
+  lucideCheck,
+  lucidePlus,
+  lucideMinus,
 } from '@ng-icons/lucide';
 import { Product, StoreService } from '../../core/services/store.service';
 
@@ -24,6 +27,9 @@ import { Product, StoreService } from '../../core/services/store.service';
       lucideArrowRight,
       lucideClock,
       lucideSparkles,
+      lucideCheck,
+      lucidePlus,
+      lucideMinus,
     }),
   ],
   selector: 'app-flash-deals',
