@@ -206,7 +206,8 @@ export class Dashboard implements OnInit, OnDestroy {
       discountPercent: 30,
       rating: 4.5,
       reviewsCount: '2.8k',
-      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80',
+      image:
+        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80',
       description: 'Ultra-low latency audio, 40mm dynamic drivers, padded memory foam headband.',
       inStock: true,
     },
@@ -219,7 +220,8 @@ export class Dashboard implements OnInit, OnDestroy {
       discountPercent: 25,
       rating: 4.6,
       reviewsCount: '1.9k',
-      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=80',
+      image:
+        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=80',
       description: 'Sleek aluminum frame, always-on Retina display, heart-rate tracking, GPS.',
       inStock: true,
     },
@@ -232,8 +234,10 @@ export class Dashboard implements OnInit, OnDestroy {
       discountPercent: 40,
       rating: 4.4,
       reviewsCount: '3.2k',
-      image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&auto=format&fit=crop&q=80',
-      description: 'All-day comfort with responsive cushioning and modern lavender streetwear highlights.',
+      image:
+        'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&auto=format&fit=crop&q=80',
+      description:
+        'All-day comfort with responsive cushioning and modern lavender streetwear highlights.',
       inStock: true,
     },
     {
@@ -245,8 +249,10 @@ export class Dashboard implements OnInit, OnDestroy {
       discountPercent: 20,
       rating: 4.5,
       reviewsCount: '1.1k',
-      image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&auto=format&fit=crop&q=80',
-      description: 'Water-resistant ballistic nylon, dedicated 16" laptop sleeve, USB pass-through port.',
+      image:
+        'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&auto=format&fit=crop&q=80',
+      description:
+        'Water-resistant ballistic nylon, dedicated 16" laptop sleeve, USB pass-through port.',
       inStock: true,
     },
   ];
@@ -261,8 +267,10 @@ export class Dashboard implements OnInit, OnDestroy {
     discountPercent: 50,
     rating: 4.5,
     reviewsCount: '4.7k',
-    image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=80',
-    description: 'Deep bass, crystal clear dual-mic calls, compact pocket case with 32h total playback.',
+    image:
+      'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=80',
+    description:
+      'Deep bass, crystal clear dual-mic calls, compact pocket case with 32h total playback.',
     inStock: true,
   };
 
@@ -276,8 +284,10 @@ export class Dashboard implements OnInit, OnDestroy {
       originalPrice: 1999,
       rating: 4.4,
       reviewsCount: '320',
-      image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&auto=format&fit=crop&q=80',
-      description: 'Heavyweight organic cotton fleece with ribbed cuffs and relaxed unisex silhouette.',
+      image:
+        'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&auto=format&fit=crop&q=80',
+      description:
+        'Heavyweight organic cotton fleece with ribbed cuffs and relaxed unisex silhouette.',
       inStock: true,
     },
     {
@@ -288,8 +298,10 @@ export class Dashboard implements OnInit, OnDestroy {
       originalPrice: 2999,
       rating: 4.6,
       reviewsCount: '1.2k',
-      image: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=500&auto=format&fit=crop&q=80',
-      description: 'Subtle blend of French lavender, white musk, and bergamot for enduring day elegance.',
+      image:
+        'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=500&auto=format&fit=crop&q=80',
+      description:
+        'Subtle blend of French lavender, white musk, and bergamot for enduring day elegance.',
       inStock: true,
     },
     {
@@ -300,7 +312,8 @@ export class Dashboard implements OnInit, OnDestroy {
       originalPrice: 1699,
       rating: 4.5,
       reviewsCount: '890',
-      image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&auto=format&fit=crop&q=80',
+      image:
+        'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&auto=format&fit=crop&q=80',
       description: 'UV400 anti-glare polarized lenses with sturdy lightweight matte acetate frame.',
       inStock: true,
     },
@@ -312,7 +325,8 @@ export class Dashboard implements OnInit, OnDestroy {
       originalPrice: 1299,
       rating: 4.4,
       reviewsCount: '560',
-      image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500&auto=format&fit=crop&q=80',
+      image:
+        'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500&auto=format&fit=crop&q=80',
       description: 'Warm ambient glow, tactile dimmer switch, handcrafted ceramic fluted base.',
       inStock: true,
     },
@@ -325,11 +339,8 @@ export class Dashboard implements OnInit, OnDestroy {
 
     return this.trendingProducts.filter((product) => {
       const matchesSearch =
-        !q ||
-        product.title.toLowerCase().includes(q) ||
-        product.category.toLowerCase().includes(q);
-      const matchesCategory =
-        cat === 'All' || product.category.toLowerCase() === cat.toLowerCase();
+        !q || product.title.toLowerCase().includes(q) || product.category.toLowerCase().includes(q);
+      const matchesCategory = cat === 'All' || product.category.toLowerCase() === cat.toLowerCase();
       return matchesSearch && matchesCategory;
     });
   });
@@ -340,11 +351,8 @@ export class Dashboard implements OnInit, OnDestroy {
 
     return this.newArrivals.filter((product) => {
       const matchesSearch =
-        !q ||
-        product.title.toLowerCase().includes(q) ||
-        product.category.toLowerCase().includes(q);
-      const matchesCategory =
-        cat === 'All' || product.category.toLowerCase() === cat.toLowerCase();
+        !q || product.title.toLowerCase().includes(q) || product.category.toLowerCase().includes(q);
+      const matchesCategory = cat === 'All' || product.category.toLowerCase() === cat.toLowerCase();
       return matchesSearch && matchesCategory;
     });
   });
@@ -449,5 +457,10 @@ export class Dashboard implements OnInit, OnDestroy {
       this.store.addToCart(product, this.quickViewQuantity());
       this.closeQuickView();
     }
+  }
+  printLog() {
+    console.log(
+      'This is my log which is called on img click while doing automation testing with playwright',
+    );
   }
 }

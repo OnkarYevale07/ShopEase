@@ -54,7 +54,8 @@
           >
             <img
               src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&auto=format&fit=crop&q=80"
-              alt="Wireless Headphones"
+              (click)="printLog()"
+              alt="Wireless Headphones s"
               class="w-full h-24 sm:h-32 object-contain"
             />
           </div>
@@ -93,7 +94,9 @@
               >
                 <ng-icon name="lucideShoppingBag" class="size-6 sm:size-7" />
               </div>
-              <span class="mt-2 text-xs font-black text-gray-800 dark:text-gray-200">Big Deals</span>
+              <span class="mt-2 text-xs font-black text-gray-800 dark:text-gray-200"
+                >Big Deals</span
+              >
             </div>
           </div>
         </div>
@@ -282,7 +285,10 @@
 
                 <!-- Rating -->
                 <div class="flex items-center gap-1 text-[11px] sm:text-xs">
-                  <ng-icon name="lucideStar" class="size-3.5 text-amber-400 [&_svg]:fill-amber-400 [&_svg]:stroke-amber-400" />
+                  <ng-icon
+                    name="lucideStar"
+                    class="size-3.5 text-amber-400 [&_svg]:fill-amber-400 [&_svg]:stroke-amber-400"
+                  />
                   <span class="font-bold text-gray-800">{{ product.rating }}</span>
                   <span class="text-gray-400">({{ product.reviewsCount }})</span>
                 </div>
@@ -432,7 +438,10 @@
             {{ flashDealProduct.title }}
           </a>
           <div class="flex items-center gap-1.5 text-xs">
-            <ng-icon name="lucideStar" class="size-3.5 text-amber-400 [&_svg]:fill-amber-400 [&_svg]:stroke-amber-400" />
+            <ng-icon
+              name="lucideStar"
+              class="size-3.5 text-amber-400 [&_svg]:fill-amber-400 [&_svg]:stroke-amber-400"
+            />
             <span class="font-bold text-gray-800">{{ flashDealProduct.rating }}</span>
             <span class="text-gray-400">({{ flashDealProduct.reviewsCount }})</span>
           </div>
@@ -639,7 +648,10 @@
 
               <!-- Rating -->
               <div class="flex items-center gap-1 text-[11px] sm:text-xs">
-                <ng-icon name="lucideStar" class="size-3.5 text-amber-400 [&_svg]:fill-amber-400 [&_svg]:stroke-amber-400" />
+                <ng-icon
+                  name="lucideStar"
+                  class="size-3.5 text-amber-400 [&_svg]:fill-amber-400 [&_svg]:stroke-amber-400"
+                />
                 <span class="font-bold text-gray-800">{{ item.rating }}</span>
                 <span class="text-gray-400">({{ item.reviewsCount }})</span>
               </div>
@@ -750,7 +762,9 @@
   <!-- ======================================================== -->
   <!-- 7. FOOTER                                                -->
   <!-- ======================================================== -->
-  <footer class="rounded-3xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 sm:p-10 shadow-2xs space-y-8">
+  <footer
+    class="rounded-3xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 sm:p-10 shadow-2xs space-y-8"
+  >
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
       <!-- Brand & Bio -->
       <div class="lg:col-span-2 space-y-3">
@@ -957,27 +971,42 @@
 
           <!-- Product Details & Actions -->
           <div class="space-y-4">
-            <span class="rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 px-2.5 py-1 text-xs font-bold">
+            <span
+              class="rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 px-2.5 py-1 text-xs font-bold"
+            >
               {{ product.category }}
             </span>
 
-            <h3 class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white">{{ product.title }}</h3>
+            <h3 class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white">
+              {{ product.title }}
+            </h3>
 
             <!-- Rating -->
             <div class="flex items-center gap-1.5 text-xs">
-              <ng-icon name="lucideStar" class="size-4 text-amber-400 [&_svg]:fill-amber-400 [&_svg]:stroke-amber-400" />
-              <span class="font-bold text-gray-900 dark:text-white text-sm">{{ product.rating }}</span>
-              <span class="text-gray-400 dark:text-gray-500">({{ product.reviewsCount }} verified reviews)</span>
+              <ng-icon
+                name="lucideStar"
+                class="size-4 text-amber-400 [&_svg]:fill-amber-400 [&_svg]:stroke-amber-400"
+              />
+              <span class="font-bold text-gray-900 dark:text-white text-sm">{{
+                product.rating
+              }}</span>
+              <span class="text-gray-400 dark:text-gray-500"
+                >({{ product.reviewsCount }} verified reviews)</span
+              >
             </div>
 
             <!-- Price & Savings -->
             <div class="flex items-baseline gap-2 pt-1">
-              <span class="text-2xl font-black text-gray-900 dark:text-white">₹{{ product.price | number }}</span>
+              <span class="text-2xl font-black text-gray-900 dark:text-white"
+                >₹{{ product.price | number }}</span
+              >
               <span class="text-sm text-gray-400 dark:text-gray-500 line-through"
                 >₹{{ product.originalPrice | number }}</span
               >
               @if (product.discountPercent) {
-                <span class="text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2 py-0.5 rounded-md">
+                <span
+                  class="text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2 py-0.5 rounded-md"
+                >
                   Save {{ product.discountPercent }}%
                 </span>
               }
@@ -991,7 +1020,9 @@
             <div class="space-y-3 pt-2">
               <div class="flex items-center gap-3">
                 <span class="text-xs font-bold text-gray-700 dark:text-gray-300">Quantity:</span>
-                <div class="flex items-center rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                <div
+                  class="flex items-center rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                >
                   <button
                     type="button"
                     (click)="adjustQuickViewQuantity(-1)"
